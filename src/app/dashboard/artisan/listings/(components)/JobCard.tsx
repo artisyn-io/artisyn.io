@@ -52,11 +52,14 @@ const JobCard = () => {
             </div>
 
             <div className="w-[70%] flex flex-col">
-              <div>
+              <div className="flex justify-between items-center">
+                <div>
                 <p className="text-[12px] text-[#212121]">Posted 2 mins ago</p>
                 <h2 className="text-[20px] font-semibold">
                   {info.shortDescription}
                 </h2>
+                </div>
+                <button onClick={() => alert("Application sent!")} className="border rounded-md py-2 hover:bg-black hover:text-white text-[14px] px-6">Apply</button>
               </div>
 
               <div className="text-[14px] flex items-center mt-auto text-[#777679]">
