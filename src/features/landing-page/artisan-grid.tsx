@@ -1,16 +1,3 @@
-/* import { ArtisanCard } from "../../components/artisan/artisan-card";
-import { artisanProps } from "./search-grid-section";
-
-export function ArtisanGrid({ artisans }: { artisans: artisanProps[] }) {
-  return (
-    <div className="flex flex-wrap justify-center gap-4 max-w-260">
-      {artisans.map((artisan, index) => (
-        <ArtisanCard key={index} artisan={artisan} />
-      ))}
-    </div>
-  );
-}
- */
 "use client";
 import { motion, AnimatePresence, easeOut } from "framer-motion";
 import { ArtisanCard } from "../../components/artisan/artisan-card";
