@@ -20,7 +20,7 @@ const Footer = () => {
                         <button className="w-[217px] h-[44px] bg-[#605DEC] hover:opacity-90 transition-opacity rounded-[12px] flex items-center justify-center font-medium shadow-lg text-white">
                             Find a Trusted Artisan
                         </button>
-                        <button className="w-[197px] h-[44px] bg-[#FFFFFF] text-[#605DEC] hover:bg-slate-100 transition-colors rounded-[12px] flex items-center justify-center font-medium shadow-lg">
+                        <button className="w-[197px] h-[44px] bg-[#FFFFFF] text-[#605DEC] hover:bg-slate-100 transition-colors rounded-[12px] flex items-center justify-center font-medium shadow-lg cursor-pointer">
                             Apply as an Artisan
                         </button>
                     </div>

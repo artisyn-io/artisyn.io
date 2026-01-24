@@ -52,7 +52,7 @@ const ArtisanSection = ({ image = "/artisan.png" }: ArtisanSectionProps) => {
                             Get discovered by clients who care about skill and results.
                         </p>
                         <div>
-                            <button className="w-[197px] h-[44px] bg-[#FFFFFF] text-[#605DEC] hover:bg-slate-100 transition-colors rounded-[12px] flex items-center justify-center font-medium shadow-lg">
+                            <button className="w-[197px] h-[44px] bg-[#FFFFFF] text-[#605DEC] hover:bg-slate-100 transition-colors rounded-[12px] flex items-center justify-center font-medium shadow-lg cursor-pointer">
                                 Apply as an Artisan
                             </button>
                         </div>
