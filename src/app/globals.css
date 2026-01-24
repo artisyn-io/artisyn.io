@@ -44,3 +44,11 @@ body {
   color: var(--foreground);
   font-family: var(--font-satoshi), sans-serif;
 }
+
+.contain-badge {
+  scrollbar-width: none;
+} 
+
+.contain-badge::-webkit-scrollbar {
+  display: none;
+}
