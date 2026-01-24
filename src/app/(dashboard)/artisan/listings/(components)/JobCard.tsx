@@ -38,10 +38,10 @@ const JobCard = () => {
   return (
     <div>
       <JobFilter onFilterChange={handleFilterChange} />
-      <div className="mt-6">
+      <div className="mt-8">
         {filteredJobs.map((info, index) => (
-          <div key={index} className="flex mb-4">
-            <div className="lg:w-[12%] md:w-[20%] mr-6">
+          <div key={index} className="flex mb-4 lg:flex-row md:flex-row flex-col">
+            <div className="lg:w-[12%] md:w-[20%] w-full lg:mr-6 md:mr-4 mr-0">
               <Image
                 src={bgImg}
                 alt=""
@@ -51,18 +51,18 @@ const JobCard = () => {
               />
             </div>
 
-            <div className="w-[70%] flex flex-col">
-              <div className="flex justify-between items-center">
+            <div className="lg:w-[70%] md:w-[70%] w-full flex flex-col lg:my-0 md:my-0 my-3">
+             <div className="flex lg:justify-between lg:items-center md:justify-between md:items-center  lg:flex-row md:flex-row flex-col">
                 <div>
                 <p className="text-[12px] text-[#212121]">Posted 2 mins ago</p>
-                <h2 className="text-[20px] font-semibold">
+                <h2 className="lg:text-[20px] md:text-[18px] text-[16px] font-semibold">
                   {info.shortDescription}
                 </h2>
                 </div>
-                <button onClick={() => alert("Application sent!")} className="border rounded-md py-2 hover:bg-black hover:text-white text-[14px] px-6">Apply</button>
+                <button onClick={() => alert("Application sent!")} className="border rounded-md py-2 hover:bg-black hover:text-white text-[14px] px-6 g:my-0 md:my-0 my-3">Apply</button>
               </div>
 
-              <div className="text-[14px] flex items-center mt-auto text-[#777679]">
+              <div className="text-[14px] flex justify-between lg:items-center md:items-center mt-auto text-[#777679] flex-col lg:flex-row md:flex-row">
                 <p>
                   Category: {info.category} <span className="mx-4">|</span>
                 </p>
