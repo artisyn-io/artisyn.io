@@ -79,14 +79,6 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
 
   return (
     <div className="space-y-[10px]">
-      {/* Progress indicator */}
-      <SlideInFromBottom delay={0.055} duration={0.45}>
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-1.5 rounded-full bg-[#6366f1]" />
-          <div className="w-8 h-1.5 rounded-full bg-[#e5e7eb]" />
-        </div>
-      </SlideInFromBottom>
-
       <SlideInFromBottom delay={0.10} duration={0.45}>
         <div className="space-y-[6px]">
           <h1 className="text-3xl font-bold text-[#020817] tracking-tight">
@@ -141,7 +133,7 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
                   <SelectItem 
                     key={category} 
                     value={category}
-                    className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100 px-[8px] py-[6px]"
+                    className="cursor-pointer hover:bg-[#605DEC90] focus:bg-gray-100 px-[8px] py-[6px]"
                   >
                     {category}
                   </SelectItem>
@@ -167,7 +159,7 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
                     <SelectItem 
                       key={state} 
                       value={state}
-                      className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100 px-[8px] py-[6px]"
+                      className="cursor-pointer hover:bg-[#605DEC90] focus:bg-gray-100 px-[8px] py-[6px]"
                     >
                       {state}
                     </SelectItem>
@@ -206,7 +198,7 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
                   <SelectItem 
                     key={option} 
                     value={option}
-                    className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100 px-[8px] py-[6px]"
+                    className="cursor-pointer hover:bg-[#605DEC90] focus:bg-gray-100 px-[8px] py-[6px]"
                   >
                     {option}
                   </SelectItem>
