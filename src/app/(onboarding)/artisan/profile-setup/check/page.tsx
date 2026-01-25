@@ -4,6 +4,9 @@ import { useState } from "react";
 import Image from "next/image"
 import { AnimatePresence, motion } from "framer-motion";
 import { ArtisanProfileStep1 } from "@/components/artisan/artisan-profile-step1";
+import { ArtisanProfileStep2 } from "@/components/artisan/artisan-profile-step2";
+import { ClientProfileForm } from "@/components/artisan/client-profile-form";
+import { OnboardingSuccess } from "@/components/artisan/onboarding-success";
 
 
 type AccountType = "artisan" | "client" | null
@@ -18,6 +21,13 @@ interface ArtisanFormData {
     profileImage: File | null
     bio: string
   }
+  interface ClientFormData {
+    fullName: string
+    email: string
+    state: string
+    city: string
+    referralSource: string
+  }
 
 export default function page() {
     const [accountType, setAccountType] = useState<AccountType>(null)
@@ -31,6 +41,13 @@ export default function page() {
         yearsOfExperience: "",
         profileImage: null,
         bio: "",
+      })
+      const [clientData, setClientData] = useState<ClientFormData>({
+        fullName: "",
+        email: "",
+        state: "",
+        city: "",
+        referralSource: "",
       })
     const handleAccountTypeSelect = (type: AccountType) => {
         setAccountType(type)
@@ -59,10 +76,18 @@ export default function page() {
         setArtisanData((prev) => ({ ...prev, ...data }))
         setCurrentStep("artisan-step2")
       }
+      const handleArtisanStep2Complete = (data: Partial<ArtisanFormData>) => {
+        setArtisanData((prev) => ({ ...prev, ...data }))
+        setCurrentStep("success")
+      }
+      const handleClientComplete = (data: ClientFormData) => {
+        setClientData(data)
+        setCurrentStep("success")
+      }
   return (
-    <div className="flex justify-between items-start">
-        <div className="form_div flex flex-col justify-top items-start w-[30vw] mx-auto py-[10vh]">
-            <div className="mb-[5vh]">
+    <div className="flex justify-between items-start overflow-hidden max-h-[100vh]">
+        <div className="form_div flex flex-col justify-top items-start mx-auto px-[2vw] py-[7vh] overflow-hidden h-[100vh] max-h-[100vh]">
+            <div className="mb-[4vh]">
                 <img src="/images/artisan_logo.png" alt="" />
             </div>
             <div>
@@ -85,7 +110,7 @@ export default function page() {
                 </AnimatePresence>)
             }
 
-{currentStep === "artisan-step1" && (
+            {currentStep === "artisan-step1" && (
               <motion.div
                 key="artisan-step1"
                 variants={pageVariants}
@@ -93,13 +118,61 @@ export default function page() {
                 animate="animate"
                 exit="exit"
                 transition={{ duration: 0.3 }}
-                className="w-full max-w-md"
+                className="w-full px-[1vw]"
               >
                 <ArtisanProfileStep1
                   data={artisanData}
                   onNext={handleArtisanStep1Next}
                 />
              </motion.div>
+            )}
+
+{currentStep === "artisan-step2" && (
+              <motion.div
+                key="artisan-step2"
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="w-full max-w-md"
+              >
+                <ArtisanProfileStep2
+                  data={artisanData}
+                  onComplete={handleArtisanStep2Complete}
+                />
+              </motion.div>
+            )}
+
+{currentStep === "client-form" && (
+              <motion.div
+                key="client-form"
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="w-full max-w-md"
+              >
+                <ClientProfileForm
+                  data={clientData}
+                  onComplete={handleClientComplete}
+                />
+              </motion.div>
+            )}
+
+{currentStep === "success" && (
+              <motion.div
+                key="success"
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="w-full max-w-md"
+              >
+                <OnboardingSuccess accountType={accountType} />
+              </motion.div>
             )}
             </div>
         </div>

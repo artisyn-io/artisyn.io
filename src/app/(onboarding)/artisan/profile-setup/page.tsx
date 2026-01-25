@@ -97,21 +97,21 @@ export default function OnboardingPage() {
         <div className="flex-1 flex items-start pt-8">
           {/* <AnimatePresence mode="wait"> */}
             {currentStep === "account-type" && (
-            //   <motion.div
-            //     key="account-type"
-            //     variants={pageVariants}
-            //     initial="initial"
-            //     animate="animate"
-            //     exit="exit"
-            //     transition={{ duration: 0.3 }}
-            //     className="w-full max-w-md"
-            //   >
+              <motion.div
+                key="account-type"
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="w-full max-w-md"
+              >
                 <AccountTypeSelection
                   selectedType={accountType}
                   onSelect={handleAccountTypeSelect}
                   onContinue={handleAccountTypeContinue}
                 />
-            //   </motion.div>
+            </motion.div>
             )}
 
             {currentStep === "artisan-step1" && (

@@ -11,10 +11,10 @@ export function OnboardingSuccess({ accountType }: OnboardingSuccessProps) {
   const isArtisan = accountType === "artisan"
 
   return (
-    <div className="space-y-6 text-center">
+    <div className="space-y-[12px] text-center">
       <div className="flex justify-center">
-        <div className="w-20 h-20 rounded-full bg-[#10b981]/10 flex items-center justify-center">
-          <CheckCircle className="w-10 h-10 text-[#10b981]" />
+        <div className="w-[60px] h-[60px] rounded-full bg-[#10b981]/10 flex items-center justify-center">
+          <CheckCircle className="w-[2vw] h-[2vw] text-[#10b981]" />
         </div>
       </div>
 
@@ -31,7 +31,7 @@ export function OnboardingSuccess({ accountType }: OnboardingSuccessProps) {
 
       <button
         type="button"
-        className="px-8 py-3 rounded-lg font-medium text-white bg-[#6366f1] hover:bg-[#5558e3] transition-all duration-200"
+        className="px-[2vw] py-[10px] mt-[4vh] rounded-lg font-medium text-[white] font-[500] text-[16px] bg-[#6366f1] hover:bg-[#5558e3] transition-all duration-200 border-[0] cursor-pointer"
       >
         {isArtisan ? "Browse Opportunities" : "Find Artisans"}
       </button>

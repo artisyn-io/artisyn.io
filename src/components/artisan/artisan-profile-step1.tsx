@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { SlideInFromBottom } from "@/components/SlideInFromBottom"
 import type { ArtisanFormData } from "@/app/(onboarding)/artisan/profile-setup/page"
 
 interface ArtisanProfileStep1Props {
@@ -79,125 +80,155 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
   return (
     <div className="space-y-[10px]">
       {/* Progress indicator */}
-      <div className="flex items-center gap-2">
-        <div className="w-8 h-1.5 rounded-full bg-[#6366f1]" />
-        <div className="w-8 h-1.5 rounded-full bg-[#e5e7eb]" />
-      </div>
+      <SlideInFromBottom delay={0.055} duration={0.45}>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-1.5 rounded-full bg-[#6366f1]" />
+          <div className="w-8 h-1.5 rounded-full bg-[#e5e7eb]" />
+        </div>
+      </SlideInFromBottom>
 
-      <div className="space-y-[6px]">
-        <h1 className="text-3xl font-bold text-[#020817] tracking-tight">
-          Set up your artisan profile
-        </h1>
-        <p className="text-[#6B6878] mb-[5vh]">
-          Tell us about your craft. This helps us review and curate your profile.
-        </p>
-      </div>
+      <SlideInFromBottom delay={0.10} duration={0.45}>
+        <div className="space-y-[6px]">
+          <h1 className="text-3xl font-bold text-[#020817] tracking-tight">
+            Set up your artisan profile
+          </h1>
+          <p className="text-[#6B6878] mb-[5vh]">
+            Tell us about your craft. This helps us review and curate your profile.
+          </p>
+        </div>
+      </SlideInFromBottom>
 
       <form onSubmit={handleSubmit} className="space-y-[15px]">
-        <div className="space-y-[6px]">
-          <Label htmlFor="fullName" className="text-[#020817] text-[14px] font-[400]">Full Name</Label>
-          <Input
-            id="fullName"
-            placeholder="Your full name"
-            value={formData.fullName}
-            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-            className="h-[5.5vh] w-full box-border px-[1vw]"
-          />
-        </div>
-
-        <div className="space-y-[6px]">
-          <Label htmlFor="email" className="text-[#020817] text-[14px] font-[400]">Email Address</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="you@example.com"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="h-[5.5vh] w-full box-border px-[1vw]"
-          />
-        </div>
-
-        <div className="space-y-[6px]">
-          <Label className="text-[#020817] text-[14px] font-[400]">Craft / Skill Category</Label>
-          <Select
-            value={formData.skillCategory}
-            onValueChange={(value) => setFormData({ ...formData, skillCategory: value })}
-          >
-            <SelectTrigger className="h-[5.5vh] w-full box-border px-[1vw]">
-              <SelectValue placeholder="Choose a skill/category" />
-            </SelectTrigger>
-            <SelectContent>
-              {skillCategories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="grid grid-cols-2 gap-[16px]">
+        <SlideInFromBottom delay={0.16} duration={0.45}>
           <div className="space-y-[6px]">
-            <Label className="text-[#020817] text-[14px] font-[400]">State</Label>
+            <Label htmlFor="fullName" className="text-[#020817] text-[14px] font-[400]">Full Name</Label>
+            <Input
+              id="fullName"
+              placeholder="Your full name"
+              value={formData.fullName}
+              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+              className="h-[5.5vh] w-full box-border px-[1vw] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
+            />
+          </div>
+        </SlideInFromBottom>
+
+        <SlideInFromBottom delay={0.22} duration={0.45}>
+          <div className="space-y-[6px]">
+            <Label htmlFor="email" className="text-[#020817] text-[14px] font-[400]">Email Address</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="h-[5.5vh] w-full box-border px-[1vw] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
+            />
+          </div>
+        </SlideInFromBottom>
+
+        <SlideInFromBottom delay={0.28} duration={0.45}>
+          <div className="space-y-[6px]">
+            <Label className="text-[#020817] text-[14px] font-[400]">Craft / Skill Category</Label>
             <Select
-              value={formData.state}
-              onValueChange={(value) => setFormData({ ...formData, state: value })}
+              value={formData.skillCategory}
+              onValueChange={(value) => setFormData({ ...formData, skillCategory: value })}
             >
-              <SelectTrigger className="h-[5.5vh] w-full box-border px-[1vw]">
-                <SelectValue placeholder="Choose State" />
+              <SelectTrigger className="h-[5.5vh] w-full box-border px-[1vw] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
+                <SelectValue placeholder="Choose a skill/category" />
               </SelectTrigger>
-              <SelectContent>
-                {nigerianStates.map((state) => (
-                  <SelectItem key={state} value={state}>
-                    {state}
+              <SelectContent className="rounded-lg border border-gray-200 bg-[white] shadow-lg max-h-[300px] overflow-y-auto">
+                {skillCategories.map((category) => (
+                  <SelectItem 
+                    key={category} 
+                    value={category}
+                    className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100 px-[8px] py-[6px]"
+                  >
+                    {category}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
+        </SlideInFromBottom>
 
+        <div className="grid grid-cols-2 gap-[16px]">
+          <SlideInFromBottom delay={0.34} duration={0.45}>
+            <div className="space-y-[6px]">
+              <Label className="text-[#020817] text-[14px] font-[400]">State</Label>
+              <Select
+                value={formData.state}
+                onValueChange={(value) => setFormData({ ...formData, state: value })}
+              >
+                <SelectTrigger className="h-[5.5vh] w-full box-border px-[1vw] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
+                  <SelectValue placeholder="Choose State" />
+                </SelectTrigger>
+                <SelectContent className="rounded-lg border border-gray-200 bg-[white] shadow-lg max-h-[300px] overflow-y-auto">
+                  {nigerianStates.map((state) => (
+                    <SelectItem 
+                      key={state} 
+                      value={state}
+                      className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100 px-[8px] py-[6px]"
+                    >
+                      {state}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </SlideInFromBottom>
+
+          <SlideInFromBottom delay={0.40} duration={0.45}>
+            <div className="space-y-[6px]">
+              <Label htmlFor="city" className="text-[#020817] text-[14px] font-[400]">City</Label>
+              <Input
+                id="city"
+                placeholder="Enter your city"
+                value={formData.city}
+                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                className="h-[5.5vh] w-full box-border px-[1vw] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
+              />
+            </div>
+          </SlideInFromBottom>
+        </div>
+
+        <SlideInFromBottom delay={0.46} duration={0.45}>
           <div className="space-y-[6px]">
-            <Label htmlFor="city" className="text-[#020817] text-[14px] font-[400]">City</Label>
-            <Input
-              id="city"
-              placeholder="Enter your city"
-              value={formData.city}
-              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-              className="h-[5.5vh] w-full box-border px-[1vw]"
-            />
+            <Label className="text-[#020817] text-[14px] font-[400]">Years of Experience</Label>
+            <Select
+              value={formData.yearsOfExperience}
+              onValueChange={(value) => setFormData({ ...formData, yearsOfExperience: value })}
+            >
+              <SelectTrigger className="h-[5.5vh] w-full box-border px-[1vw] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
+                <SelectValue placeholder="Choose an option" />
+              </SelectTrigger>
+              <SelectContent className="rounded-lg border border-gray-200 bg-[white] shadow-lg max-h-[300px] overflow-y-auto">
+                {experienceOptions.map((option) => (
+                  <SelectItem 
+                    key={option} 
+                    value={option}
+                    className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100 px-[8px] py-[6px]"
+                  >
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </div>
+        </SlideInFromBottom>
 
-        <div className="space-y-[6px]">
-          <Label className="text-[#020817] text-[14px] font-[400]">Years of Experience</Label>
-          <Select
-            value={formData.yearsOfExperience}
-            onValueChange={(value) => setFormData({ ...formData, yearsOfExperience: value })}
+        <SlideInFromBottom delay={0.56} duration={0.35}>
+          <button
+            type="submit"
+            disabled={!isFormValid}
+            className={`px-[2vw] py-[10px] mt-[4vh] rounded-lg font-medium text-[white] font-[500] text-[16px] transition-all duration-200 cursor-pointer bg-[#605DEC] border-none ${
+              isFormValid
+                ? "hover:bg-[#5558e3]"
+                : "hover:cursor-not-allowed"
+            }`}
           >
-            <SelectTrigger className="h-[5.5vh] w-full box-border px-[1vw]">
-              <SelectValue placeholder="Choose an option" />
-            </SelectTrigger>
-            <SelectContent>
-              {experienceOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <button
-          type="submit"
-          disabled={!isFormValid}
-          className={`px-[2vw] py-[10px] mt-[4vh] rounded-lg font-medium text-[white] font-[500] text-[16px] transition-all duration-200 cursor-pointer bg-[#605DEC] border-none ${
-            isFormValid
-              ? "hover:bg-[#5558e3]"
-              : "cursor-not-allowed"
-          }`}
-        >
-          Next
-        </button>
+            Next
+          </button>
+        </SlideInFromBottom>
       </form>
     </div>
   )
