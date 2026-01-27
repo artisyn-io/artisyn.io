@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { SlideInFromBottom } from "@/components/SlideInFromBottom"
-import type { ArtisanFormData } from "@/app/(onboarding)/artisan/profile-setup/page"
+import type { ArtisanFormData } from "@/app/(auth)/profile-setup/page"
 
 interface ArtisanProfileStep1Props {
   data: ArtisanFormData

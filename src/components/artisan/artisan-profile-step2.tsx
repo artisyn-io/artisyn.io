@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react"
 import { Camera } from "lucide-react"
 import { Label } from "@/components/ui/label"
-import type { ArtisanFormData } from "@/app/(onboarding)/artisan/profile-setup/page"
+import type { ArtisanFormData } from "@/app/(auth)/profile-setup/page"
 import { SlideInFromBottom } from "@/components/SlideInFromBottom"
 
 interface ArtisanProfileStep2Props {

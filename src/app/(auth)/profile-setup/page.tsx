@@ -8,9 +8,9 @@ import { ArtisanProfileStep2 } from "@/components/artisan/artisan-profile-step2"
 import { OnboardingSuccess } from "@/components/artisan/onboarding-success";
 import { ProgressIndicator } from "@/components/progress-indicator";
 
-type AccountType = "artisan" | "client" | null
-type OnboardingStep = "account-type" | "artisan-step1" | "artisan-step2" | "client-form" | "success"
-interface ArtisanFormData {
+export type AccountType = "artisan" | "client" | null
+export type OnboardingStep = "account-type" | "artisan-step1" | "artisan-step2" | "client-form" | "success"
+export interface ArtisanFormData {
   fullName: string
   email: string
   skillCategory: string
