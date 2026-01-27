@@ -163,15 +163,15 @@ export default function page() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row justify-between items-start overflow-hidden max-h-[100vh]">
+    <div className="flex flex-col md:flex-row justify-between items-start overflow-hidden max-h-[100vh]">
       {/* Form container - responsive width */}
-      <div className="form_div flex flex-col justify-top items-start w-full lg:w-auto mx-auto px-[20px] sm:px-[32px] lg:px-[40px] py-[40px] sm:py-[56px] lg:py-[7vh] overflow-y-auto h-[100vh] max-h-[100vh]">
-        <div className="mb-[32px] sm:mb-[40px] lg:mb-[4vh]">
+      <div className="form_div flex flex-col justify-top items-start w-full md:w-auto mx-auto px-[20px] sm:px-[32px] md:px-[40px] py-[40px] sm:py-[56px] md:py-[7vh] overflow-y-auto h-[100vh] max-h-[100vh]">
+        <div className="mb-[32px] sm:mb-[40px] md:mb-[4vh]">
           <img src="/images/artisan_logo.png" alt="" className="h-[32px] sm:h-[40px] w-auto" />
         </div>
 
         {(accountType === "artisan" && (currentStep === "artisan-step1" || currentStep === "artisan-step2")) && (
-          <div className="w-full flex items-center justify-between px-[8px] sm:px-[12px] lg:px-[1vw] mb-[24px] sm:mb-[28px]" style={{ maxWidth: 520 }}>
+          <div className="w-full flex items-center justify-between px-[8px] sm:px-[12px] md:px-[1vw] mb-[24px] sm:mb-[28px]" style={{ maxWidth: 520 }}>
             <div className="flex-1">
               <ProgressIndicator currentStep={getProgressStep()} totalSteps={2} />
             </div>
@@ -183,7 +183,7 @@ export default function page() {
                   hover:bg-[#ededfb] 
                   border-none bg-[transparent] 
                   text-[#6366F1] hover:text-[#4338ca] 
-                  px-[12px] sm:px-[16px] lg:px-[18px] py-[6px] sm:py-[7px] rounded-[8px]
+                  px-[12px] sm:px-[16px] md:px-[18px] py-[6px] sm:py-[7px] rounded-[8px]
                   font-medium text-[13px] sm:text-[14px]
                   transition-all duration-[200ms]
                   group cursor-pointer
@@ -280,9 +280,9 @@ export default function page() {
         </div>
       </div>
       
-      {/* Image section - hidden on mobile, visible on large screens */}
+      {/* Image section - hidden on mobile, visible on medium screens and up */}
       <div
-        className="img_div shadow-lg hidden lg:block"
+        className="img_div shadow-lg hidden md:block"
         style={{
           width: "42vw",
           height: "100vh",
@@ -306,7 +306,7 @@ export default function page() {
               objectFit: "cover",
               filter: "brightness(0.99) saturate(1.13) contrast(1.02)",
             }}
-            sizes="(min-width: 1024px) 42vw, 0vw"
+            sizes="(min-width: 768px) 42vw, 0vw"
             priority
           />
           {/* Overlay gradient for style */}

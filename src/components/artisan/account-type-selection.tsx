@@ -20,10 +20,10 @@ export function AccountTypeSelection({
     <div className="space-y-[24px] sm:space-y-[32px]">
       <SlideInFromBottom delay={0.1} duration={0.45}>
         <div className="space-y-[8px] sm:space-y-[12px]">
-          <h1 className="text-[24px] sm:text-[28px] lg:text-[32px] font-bold text-[#020817] tracking-tight">
+          <h1 className="text-[24px] sm:text-[28px] md:text-[32px] font-bold text-[#020817] tracking-tight">
             Choose your account type
           </h1>
-          <p className="text-[14px] sm:text-[15px] lg:text-[16px] text-[#6B6878] mb-[24px] sm:mb-[32px] lg:mb-[5vh]">
+          <p className="text-[14px] sm:text-[15px] md:text-[16px] text-[#6B6878] mb-[24px] sm:mb-[32px] md:mb-[5vh]">
             Select how you want to use Artisyn. You can change this later.
           </p>
         </div>
@@ -43,15 +43,15 @@ export function AccountTypeSelection({
           >
             <div className="flex justify-start items-center gap-x-[12px] sm:gap-x-[14px] mb-[8px] sm:mb-[10px]">
               <div className="flex justify-between items-start rounded-[8px]">
-                <CircleUserRound className="w-[18px] sm:w-[20px] lg:w-[22px] h-[18px] sm:h-[20px] lg:h-[22px] text-[#212121]" />
+                <CircleUserRound className="w-[18px] sm:w-[20px] md:w-[22px] h-[18px] sm:h-[20px] md:h-[22px] text-[#212121]" />
               </div>
               <h3
-                className="font-medium text-[#212121] text-[18px] sm:text-[20px] lg:text-[24px] tracking-normal"
+                className="font-medium text-[#212121] text-[18px] sm:text-[20px] md:text-[24px] tracking-normal"
               >
                 I want to hire artisans
               </h3>
             </div>
-            <div className="pl-[30px] sm:pl-[34px] lg:pl-[36px]">
+            <div className="pl-[30px] sm:pl-[34px] md:pl-[36px]">
               <p className="font-normal text-[13px] sm:text-[14px] text-[#6B6878]">
                 Find skilled, curated artisans and hire with confidence for your projects.
               </p>
@@ -70,15 +70,15 @@ export function AccountTypeSelection({
           >
             <div className="flex justify-start items-center gap-x-[12px] sm:gap-x-[14px] mb-[8px] sm:mb-[10px]">
               <div className="flex justify-between items-start rounded-[8px]">
-                <BriefcaseBusiness className="w-[18px] sm:w-[20px] lg:w-[22px] h-[18px] sm:h-[20px] lg:h-[22px] text-[#212121]" />
+                <BriefcaseBusiness className="w-[18px] sm:w-[20px] md:w-[22px] h-[18px] sm:h-[20px] md:h-[22px] text-[#212121]" />
               </div>
               <h3
-                className="font-medium text-[#212121] text-[18px] sm:text-[20px] lg:text-[24px] tracking-normal"
+                className="font-medium text-[#212121] text-[18px] sm:text-[20px] md:text-[24px] tracking-normal"
               >
                 I&apos;m an artisan
               </h3>
             </div>
-            <div className="pl-[30px] sm:pl-[34px] lg:pl-[36px]">
+            <div className="pl-[30px] sm:pl-[34px] md:pl-[36px]">
               <p className="font-normal text-[13px] sm:text-[14px] text-[#6B6878]">
                 Showcase your skills, get discovered, and work with clients who value quality.
               </p>
@@ -93,7 +93,7 @@ export function AccountTypeSelection({
           onClick={onContinue}
           disabled={!selectedType}
           className={cn(
-            "w-full sm:w-auto px-[32px] sm:px-[40px] lg:px-[48px] py-[12px] sm:py-[13px] mt-[24px] sm:mt-[32px] lg:mt-[4vh] rounded-[8px] sm:rounded-[10px] font-medium text-[white] font-[500] text-[15px] sm:text-[16px] transition-all duration-[200ms] cursor-pointer",
+            "w-full sm:w-auto px-[32px] sm:px-[40px] md:px-[48px] py-[12px] sm:py-[13px] mt-[24px] sm:mt-[32px] md:mt-[4vh] rounded-[8px] sm:rounded-[10px] font-medium text-[white] font-[500] text-[15px] sm:text-[16px] transition-all duration-[200ms] cursor-pointer",
             "bg-[#605DEC] border-none",
             selectedType ? "hover:bg-[#483bb6]" : "cursor-not-allowed opacity-[0.6]"
           )}

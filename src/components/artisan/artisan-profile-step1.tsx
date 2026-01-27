@@ -81,10 +81,10 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
     <div className="space-y-[10px] sm:space-y-[12px]">
       <SlideInFromBottom delay={0.10} duration={0.45}>
         <div className="space-y-[6px] sm:space-y-[8px]">
-          <h1 className="text-[24px] sm:text-[28px] lg:text-[32px] font-bold text-[#020817] tracking-tight">
+          <h1 className="text-[24px] sm:text-[28px] md:text-[32px] font-bold text-[#020817] tracking-tight">
             Set up your artisan profile
           </h1>
-          <p className="text-[14px] sm:text-[15px] lg:text-[16px] text-[#6B6878] mb-[24px] sm:mb-[32px] lg:mb-[5vh]">
+          <p className="text-[14px] sm:text-[15px] md:text-[16px] text-[#6B6878] mb-[24px] sm:mb-[32px] md:mb-[5vh]">
             Tell us about your craft. This helps us review and curate your profile.
           </p>
         </div>
@@ -99,7 +99,7 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
               placeholder="Your full name"
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-              className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
+              className="h-[48px] sm:h-[52px] md:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] md:px-[1vw] text-[14px] sm:text-[15px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
             />
           </div>
         </SlideInFromBottom>
@@ -113,7 +113,7 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
               placeholder="you@example.com"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
+              className="h-[48px] sm:h-[52px] md:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] md:px-[1vw] text-[14px] sm:text-[15px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
             />
           </div>
         </SlideInFromBottom>
@@ -125,10 +125,10 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
               value={formData.skillCategory}
               onValueChange={(value) => setFormData({ ...formData, skillCategory: value })}
             >
-              <SelectTrigger className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
+              <SelectTrigger className="h-[48px] sm:h-[52px] md:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] md:px-[1vw] text-[14px] sm:text-[15px] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
                 <SelectValue placeholder="Choose a skill/category" />
               </SelectTrigger>
-              <SelectContent className="rounded-[8px] sm:rounded-[10px] border border-[#E5E7EB] bg-[white] shadow-lg max-h-[240px] sm:max-h-[280px] lg:max-h-[300px] overflow-y-auto">
+              <SelectContent className="rounded-[8px] sm:rounded-[10px] border border-[#E5E7EB] bg-[white] shadow-lg max-h-[240px] sm:max-h-[280px] md:max-h-[300px] overflow-y-auto">
                 {skillCategories.map((category) => (
                   <SelectItem 
                     key={category} 
@@ -151,10 +151,10 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
                 value={formData.state}
                 onValueChange={(value) => setFormData({ ...formData, state: value })}
               >
-                <SelectTrigger className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
+                <SelectTrigger className="h-[48px] sm:h-[52px] md:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] md:px-[1vw] text-[14px] sm:text-[15px] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
                   <SelectValue placeholder="Choose State" />
                 </SelectTrigger>
-                <SelectContent className="rounded-[8px] sm:rounded-[10px] border border-[#E5E7EB] bg-[white] shadow-lg max-h-[240px] sm:max-h-[280px] lg:max-h-[300px] overflow-y-auto">
+                <SelectContent className="rounded-[8px] sm:rounded-[10px] border border-[#E5E7EB] bg-[white] shadow-lg max-h-[240px] sm:max-h-[280px] md:max-h-[300px] overflow-y-auto">
                   {nigerianStates.map((state) => (
                     <SelectItem 
                       key={state} 
@@ -177,7 +177,7 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
                 placeholder="Enter your city"
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
+                className="h-[48px] sm:h-[52px] md:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] md:px-[1vw] text-[14px] sm:text-[15px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
               />
             </div>
           </SlideInFromBottom>
@@ -190,10 +190,10 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
               value={formData.yearsOfExperience}
               onValueChange={(value) => setFormData({ ...formData, yearsOfExperience: value })}
             >
-              <SelectTrigger className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
+              <SelectTrigger className="h-[48px] sm:h-[52px] md:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] md:px-[1vw] text-[14px] sm:text-[15px] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
                 <SelectValue placeholder="Choose an option" />
               </SelectTrigger>
-              <SelectContent className="rounded-[8px] sm:rounded-[10px] border border-[#E5E7EB] bg-[white] shadow-lg max-h-[240px] sm:max-h-[280px] lg:max-h-[300px] overflow-y-auto">
+              <SelectContent className="rounded-[8px] sm:rounded-[10px] border border-[#E5E7EB] bg-[white] shadow-lg max-h-[240px] sm:max-h-[280px] md:max-h-[300px] overflow-y-auto">
                 {experienceOptions.map((option) => (
                   <SelectItem 
                     key={option} 
@@ -212,7 +212,7 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
           <button
             type="submit"
             disabled={!isFormValid}
-            className={`w-full sm:w-auto px-[32px] sm:px-[40px] lg:px-[48px] py-[12px] sm:py-[13px] mt-[24px] sm:mt-[32px] lg:mt-[4vh] rounded-[8px] sm:rounded-[10px] font-medium text-[white] font-[500] text-[15px] sm:text-[16px] transition-all duration-[200ms] cursor-pointer bg-[#605DEC] border-none ${
+            className={`w-full sm:w-auto px-[32px] sm:px-[40px] md:px-[48px] py-[12px] sm:py-[13px] mt-[24px] sm:mt-[32px] md:mt-[4vh] rounded-[8px] sm:rounded-[10px] font-medium text-[white] font-[500] text-[15px] sm:text-[16px] transition-all duration-[200ms] cursor-pointer bg-[#605DEC] border-none ${
               isFormValid
                 ? "hover:bg-[#5558e3]"
                 : "hover:cursor-not-allowed opacity-[0.6]"
