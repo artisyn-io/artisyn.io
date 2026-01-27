@@ -44,31 +44,31 @@ export function ArtisanProfileStep2({ data, onComplete }: ArtisanProfileStep2Pro
   const isFormValid = bio.trim().length > 0 && !!profileImage
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-[20px] sm:space-y-[24px]">
       <SlideInFromBottom delay={0.15} duration={0.45}>
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-[#020817] tracking-tight">
+        <div className="space-y-[6px] sm:space-y-[8px]">
+          <h1 className="text-[24px] sm:text-[28px] lg:text-[32px] font-bold text-[#020817] tracking-tight">
             Set up your artisan profile
           </h1>
-          <p className="text-[#6B6878] mb-[5vh]">
+          <p className="text-[14px] sm:text-[15px] lg:text-[16px] text-[#6B6878] mb-[24px] sm:mb-[32px] lg:mb-[5vh]">
             Tell us about your craft. This helps us review and curate your profile.
           </p>
         </div>
       </SlideInFromBottom>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-[20px] sm:space-y-[24px]">
         <SlideInFromBottom delay={0.21} duration={0.45}>
-          <div className="space-y-3">
-            <Label className="text-[#020817] text-[14px] font-[400] mb-[1vh]">
-              Upload profile image <span className="text-red-500">*</span>
+          <div className="space-y-[10px] sm:space-y-[12px]">
+            <Label className="text-[#020817] text-[13px] sm:text-[14px] font-[400] mb-[8px] sm:mb-[1vh]">
+              Upload profile image <span className="text-[#EF4444]">*</span>
             </Label>
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className={`w-[80px] h-[80px] border border-dashed rounded-lg flex items-center justify-center transition-colors overflow-hidden mb-[3vh] bg-transparent cursor-pointer ${
+              className={`w-[72px] h-[72px] sm:w-[80px] sm:h-[80px] border-[2px] border-dashed rounded-[8px] sm:rounded-[10px] flex items-center justify-center transition-colors overflow-hidden mb-[20px] sm:mb-[24px] lg:mb-[3vh] bg-[transparent] cursor-pointer ${
                 profileImage || !imageTouched
                   ? "border-[#BDBCDB] hover:border-[#6366f1]"
-                  : "border-red-500"
+                  : "border-[#EF4444]"
               }`}
             >
               {previewUrl ? (
@@ -78,7 +78,7 @@ export function ArtisanProfileStep2({ data, onComplete }: ArtisanProfileStep2Pro
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <Camera className="w-[26px] h-[21px] text-[#212121]" />
+                <Camera className="w-[24px] h-[20px] sm:w-[26px] sm:h-[21px] text-[#212121]" />
               )}
             </button>
             <input
@@ -90,7 +90,7 @@ export function ArtisanProfileStep2({ data, onComplete }: ArtisanProfileStep2Pro
               required
             />
             {!profileImage && imageTouched && (
-              <div className="text-red-500 text-[13px] mt-[-7px] ml-[2px]">
+              <div className="text-[#EF4444] text-[12px] sm:text-[13px] mt-[-6px] sm:mt-[-7px] ml-[2px]">
                 Please upload a profile image.
               </div>
             )}
@@ -98,14 +98,14 @@ export function ArtisanProfileStep2({ data, onComplete }: ArtisanProfileStep2Pro
         </SlideInFromBottom>
 
         <SlideInFromBottom delay={0.32} duration={0.45}>
-          <div className="space-y-3">
-            <Label htmlFor="bio" className="text-[#020817] text-[14px] font-[400] mb-[1vh]">Brief About Your Work</Label>
+          <div className="space-y-[10px] sm:space-y-[12px]">
+            <Label htmlFor="bio" className="text-[#020817] text-[13px] sm:text-[14px] font-[400] mb-[8px] sm:mb-[1vh]">Brief About Your Work</Label>
             <textarea
               id="bio"
               placeholder="Describe your skills, experience, and the type of work you do."
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              className="w-full min-h-[180px] resize-none p-[20px] box-border border border-gray-300 rounded-md hover:border-[#6366f1] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC] focus:outline-none"
+              className="w-full min-h-[160px] sm:min-h-[180px] resize-none p-[16px] sm:p-[18px] lg:p-[20px] box-border border border-[#D1D5DB] rounded-[8px] sm:rounded-[10px] hover:border-[#6366f1] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC] focus:outline-none text-[14px] sm:text-[15px]"
               rows={8}
             />
           </div>
@@ -115,10 +115,10 @@ export function ArtisanProfileStep2({ data, onComplete }: ArtisanProfileStep2Pro
           <button
             type="submit"
             disabled={!isFormValid}
-            className={`px-[2vw] py-[10px] mt-[4vh] rounded-lg font-medium text-[white] font-[500] text-[16px] transition-all duration-200 cursor-pointer bg-[#605DEC] border-none ${
+            className={`w-full sm:w-auto px-[32px] sm:px-[40px] lg:px-[48px] py-[12px] sm:py-[13px] mt-[24px] sm:mt-[32px] lg:mt-[4vh] rounded-[8px] sm:rounded-[10px] font-medium text-[white] font-[500] text-[15px] sm:text-[16px] transition-all duration-[200ms] cursor-pointer bg-[#605DEC] border-none ${
               isFormValid
                 ? "hover:bg-[#5558e3]"
-                : "hover:cursor-not-allowed"
+                : "hover:cursor-not-allowed opacity-[0.6]"
             }`}
           >
             Complete Setup

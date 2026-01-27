@@ -78,62 +78,62 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
     formData.yearsOfExperience
 
   return (
-    <div className="space-y-[10px]">
+    <div className="space-y-[10px] sm:space-y-[12px]">
       <SlideInFromBottom delay={0.10} duration={0.45}>
-        <div className="space-y-[6px]">
-          <h1 className="text-3xl font-bold text-[#020817] tracking-tight">
+        <div className="space-y-[6px] sm:space-y-[8px]">
+          <h1 className="text-[24px] sm:text-[28px] lg:text-[32px] font-bold text-[#020817] tracking-tight">
             Set up your artisan profile
           </h1>
-          <p className="text-[#6B6878] mb-[5vh]">
+          <p className="text-[14px] sm:text-[15px] lg:text-[16px] text-[#6B6878] mb-[24px] sm:mb-[32px] lg:mb-[5vh]">
             Tell us about your craft. This helps us review and curate your profile.
           </p>
         </div>
       </SlideInFromBottom>
 
-      <form onSubmit={handleSubmit} className="space-y-[15px]">
+      <form onSubmit={handleSubmit} className="space-y-[14px] sm:space-y-[16px]">
         <SlideInFromBottom delay={0.16} duration={0.45}>
-          <div className="space-y-[6px]">
-            <Label htmlFor="fullName" className="text-[#020817] text-[14px] font-[400]">Full Name</Label>
+          <div className="space-y-[6px] sm:space-y-[8px]">
+            <Label htmlFor="fullName" className="text-[#020817] text-[13px] sm:text-[14px] font-[400]">Full Name</Label>
             <Input
               id="fullName"
               placeholder="Your full name"
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-              className="h-[5.5vh] w-full box-border px-[1vw] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
+              className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
             />
           </div>
         </SlideInFromBottom>
 
         <SlideInFromBottom delay={0.22} duration={0.45}>
-          <div className="space-y-[6px]">
-            <Label htmlFor="email" className="text-[#020817] text-[14px] font-[400]">Email Address</Label>
+          <div className="space-y-[6px] sm:space-y-[8px]">
+            <Label htmlFor="email" className="text-[#020817] text-[13px] sm:text-[14px] font-[400]">Email Address</Label>
             <Input
               id="email"
               type="email"
               placeholder="you@example.com"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="h-[5.5vh] w-full box-border px-[1vw] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
+              className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
             />
           </div>
         </SlideInFromBottom>
 
         <SlideInFromBottom delay={0.28} duration={0.45}>
-          <div className="space-y-[6px]">
-            <Label className="text-[#020817] text-[14px] font-[400]">Craft / Skill Category</Label>
+          <div className="space-y-[6px] sm:space-y-[8px]">
+            <Label className="text-[#020817] text-[13px] sm:text-[14px] font-[400]">Craft / Skill Category</Label>
             <Select
               value={formData.skillCategory}
               onValueChange={(value) => setFormData({ ...formData, skillCategory: value })}
             >
-              <SelectTrigger className="h-[5.5vh] w-full box-border px-[1vw] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
+              <SelectTrigger className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
                 <SelectValue placeholder="Choose a skill/category" />
               </SelectTrigger>
-              <SelectContent className="rounded-lg border border-gray-200 bg-[white] shadow-lg max-h-[300px] overflow-y-auto">
+              <SelectContent className="rounded-[8px] sm:rounded-[10px] border border-[#E5E7EB] bg-[white] shadow-lg max-h-[240px] sm:max-h-[280px] lg:max-h-[300px] overflow-y-auto">
                 {skillCategories.map((category) => (
                   <SelectItem 
                     key={category} 
                     value={category}
-                    className="cursor-pointer hover:bg-[#605DEC90] focus:bg-gray-100 px-[8px] py-[6px]"
+                    className="cursor-pointer hover:bg-[#605DEC90] focus:bg-[#F3F4F6] px-[8px] sm:px-[10px] py-[6px] sm:py-[7px] text-[14px] sm:text-[15px]"
                   >
                     {category}
                   </SelectItem>
@@ -143,23 +143,23 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
           </div>
         </SlideInFromBottom>
 
-        <div className="grid grid-cols-2 gap-[16px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-[14px] sm:gap-[16px]">
           <SlideInFromBottom delay={0.34} duration={0.45}>
-            <div className="space-y-[6px]">
-              <Label className="text-[#020817] text-[14px] font-[400]">State</Label>
+            <div className="space-y-[6px] sm:space-y-[8px]">
+              <Label className="text-[#020817] text-[13px] sm:text-[14px] font-[400]">State</Label>
               <Select
                 value={formData.state}
                 onValueChange={(value) => setFormData({ ...formData, state: value })}
               >
-                <SelectTrigger className="h-[5.5vh] w-full box-border px-[1vw] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
+                <SelectTrigger className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
                   <SelectValue placeholder="Choose State" />
                 </SelectTrigger>
-                <SelectContent className="rounded-lg border border-gray-200 bg-[white] shadow-lg max-h-[300px] overflow-y-auto">
+                <SelectContent className="rounded-[8px] sm:rounded-[10px] border border-[#E5E7EB] bg-[white] shadow-lg max-h-[240px] sm:max-h-[280px] lg:max-h-[300px] overflow-y-auto">
                   {nigerianStates.map((state) => (
                     <SelectItem 
                       key={state} 
                       value={state}
-                      className="cursor-pointer hover:bg-[#605DEC90] focus:bg-gray-100 px-[8px] py-[6px]"
+                      className="cursor-pointer hover:bg-[#605DEC90] focus:bg-[#F3F4F6] px-[8px] sm:px-[10px] py-[6px] sm:py-[7px] text-[14px] sm:text-[15px]"
                     >
                       {state}
                     </SelectItem>
@@ -170,35 +170,35 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
           </SlideInFromBottom>
 
           <SlideInFromBottom delay={0.40} duration={0.45}>
-            <div className="space-y-[6px]">
-              <Label htmlFor="city" className="text-[#020817] text-[14px] font-[400]">City</Label>
+            <div className="space-y-[6px] sm:space-y-[8px]">
+              <Label htmlFor="city" className="text-[#020817] text-[13px] sm:text-[14px] font-[400]">City</Label>
               <Input
                 id="city"
                 placeholder="Enter your city"
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                className="h-[5.5vh] w-full box-border px-[1vw] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
+                className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
               />
             </div>
           </SlideInFromBottom>
         </div>
 
         <SlideInFromBottom delay={0.46} duration={0.45}>
-          <div className="space-y-[6px]">
-            <Label className="text-[#020817] text-[14px] font-[400]">Years of Experience</Label>
+          <div className="space-y-[6px] sm:space-y-[8px]">
+            <Label className="text-[#020817] text-[13px] sm:text-[14px] font-[400]">Years of Experience</Label>
             <Select
               value={formData.yearsOfExperience}
               onValueChange={(value) => setFormData({ ...formData, yearsOfExperience: value })}
             >
-              <SelectTrigger className="h-[5.5vh] w-full box-border px-[1vw] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
+              <SelectTrigger className="h-[48px] sm:h-[52px] lg:h-[5.5vh] w-full box-border px-[14px] sm:px-[16px] lg:px-[1vw] text-[14px] sm:text-[15px] focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
                 <SelectValue placeholder="Choose an option" />
               </SelectTrigger>
-              <SelectContent className="rounded-lg border border-gray-200 bg-[white] shadow-lg max-h-[300px] overflow-y-auto">
+              <SelectContent className="rounded-[8px] sm:rounded-[10px] border border-[#E5E7EB] bg-[white] shadow-lg max-h-[240px] sm:max-h-[280px] lg:max-h-[300px] overflow-y-auto">
                 {experienceOptions.map((option) => (
                   <SelectItem 
                     key={option} 
                     value={option}
-                    className="cursor-pointer hover:bg-[#605DEC90] focus:bg-gray-100 px-[8px] py-[6px]"
+                    className="cursor-pointer hover:bg-[#605DEC90] focus:bg-[#F3F4F6] px-[8px] sm:px-[10px] py-[6px] sm:py-[7px] text-[14px] sm:text-[15px]"
                   >
                     {option}
                   </SelectItem>
@@ -212,10 +212,10 @@ export function ArtisanProfileStep1({ data, onNext }: ArtisanProfileStep1Props) 
           <button
             type="submit"
             disabled={!isFormValid}
-            className={`px-[2vw] py-[10px] mt-[4vh] rounded-lg font-medium text-[white] font-[500] text-[16px] transition-all duration-200 cursor-pointer bg-[#605DEC] border-none ${
+            className={`w-full sm:w-auto px-[32px] sm:px-[40px] lg:px-[48px] py-[12px] sm:py-[13px] mt-[24px] sm:mt-[32px] lg:mt-[4vh] rounded-[8px] sm:rounded-[10px] font-medium text-[white] font-[500] text-[15px] sm:text-[16px] transition-all duration-[200ms] cursor-pointer bg-[#605DEC] border-none ${
               isFormValid
                 ? "hover:bg-[#5558e3]"
-                : "hover:cursor-not-allowed"
+                : "hover:cursor-not-allowed opacity-[0.6]"
             }`}
           >
             Next
