@@ -1,137 +1,152 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { kit, FREIGHTER_ID, ALBEDO_ID } from "../lib/stellar-wallets-kit";
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { Horizon, Networks, Asset, TransactionBuilder, Operation, Memo, BASE_FEE } from '@stellar/stellar-sdk';
+import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
+import { kit as getKitInstance } from '@/lib/stellar-wallets-kit';
 
-interface WalletContextType {
-  isConnected: boolean;
-  publicKey: string | null;
-  connect: () => Promise<void>;
-  connectWallet: (walletType: 'freighter' | 'albedo' | 'lobstr') => Promise<void>;
-  disconnect: () => void;
-  isLoading: boolean;
+const Server = Horizon.Server;
+
+export interface Balance {
+  balance: string;
+  asset_type: string;
+  asset_code?: string;
+  asset_issuer?: string;
 }
 
-const WalletContext = createContext<WalletContextType | undefined>(undefined);
+export interface PaymentOptions {
+  to: string;
+  amount: string;
+  asset?: 'XLM' | { code: string; issuer: string };
+  memo?: string;
+  secret?: string;
+}
 
-// Map wallet types to their IDs
-const WALLET_IDS = {
-  freighter: FREIGHTER_ID,
-  albedo: ALBEDO_ID,
-  lobstr: 'lobstr', // Lobstr ID
-};
+interface WalletContextState {
+  connected: boolean;
+  publicKey?: string;
+  walletName?: string;
+  balances: Balance[];
+  connect: (walletId?: string) => Promise<void>; // Updated signature
+  disconnect: () => void;
+  refreshBalances: () => Promise<void>;
+  sendPayment?: (opts: PaymentOptions) => Promise<Horizon.HorizonApi.SubmitTransactionResponse>;
+}
 
-export function WalletProvider({ children }: { children: React.ReactNode }) {
-  const [isConnected, setIsConnected] = useState(false);
-  const [publicKey, setPublicKey] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+interface WalletConfigContextState {
+  horizonUrl: string;
+  network: string;
+}
 
-  // Auto-restore wallet connection on mount
-  useEffect(() => {
-    const restoreConnection = async () => {
-      try {
-        const storedPublicKey = localStorage.getItem("walletPublicKey");
-        const storedWalletId = localStorage.getItem("walletId");
+const WalletContext = createContext<WalletContextState | undefined>(undefined);
+const WalletConfigContext = createContext<WalletConfigContextState | undefined>(undefined);
 
-        if (storedPublicKey && storedWalletId) {
-          setPublicKey(storedPublicKey);
-          setIsConnected(true);
-        }
-      } catch (error) {
-        console.error("Failed to restore wallet connection:", error);
-        localStorage.removeItem("walletPublicKey");
-        localStorage.removeItem("walletId");
-      } finally {
-        setIsLoading(false);
+export function WalletProvider({
+  children,
+  horizonUrl = 'https://horizon-testnet.stellar.org',
+  network = Networks.TESTNET
+}: { children: ReactNode; horizonUrl?: string; network?: string }) {
+  const [connected, setConnected] = useState(false);
+  const [publicKey, setPublicKey] = useState<string>();
+  const [walletName, setWalletName] = useState<string>();
+  const [balances, setBalances] = useState<Balance[]>([]);
+  const [server] = useState(() => new Server(horizonUrl));
+
+  const handleWalletSelection = useCallback(async (id: string, name: string) => {
+    const kit = getKitInstance();
+    kit.setWallet(id);
+    const { address } = await kit.getAddress();
+
+    setPublicKey(address);
+    setWalletName(name);
+    setConnected(true);
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('stellar_wallet_connected', 'true');
+      localStorage.setItem('stellar_wallet_id', id);
+      localStorage.setItem('stellar_wallet_address', address);
+      localStorage.setItem('stellar_wallet_name', name);
+    }
+
+    try {
+      const account = await server.accounts().accountId(address).call();
+      setBalances(account.balances);
+    } catch (e) {
+      setBalances([]);
+    }
+  }, [server]);
+
+  const connect = useCallback(async (walletId?: string) => {
+    try {
+      const kit = getKitInstance();
+      
+      if (walletId) {
+        // Direct Connection (No Modal)
+        // Find the module name for the UI state
+        const modules = (kit as any).options?.modules || [];
+        const target = modules.find((m: any) => m.id === walletId);
+        await handleWalletSelection(walletId, target?.name || walletId);
+      } else {
+        // Fallback to Modal
+        await kit.openModal({
+          modalTitle: "Connect to your favorite wallet",
+          onWalletSelected: async (option: ISupportedWallet) => {
+            await handleWalletSelection(option.id, option.name);
+          },
+        });
       }
-    };
+    } catch (error: any) {
+      // Improve visibility into what the SDK is actually throwing
+      console.error("Connection failed raw value:", error);
+      console.error("Connection failed details:", {
+        message: error?.message,
+        code: error?.code,
+        name: error?.name,
+        stack: error?.stack,
+      });
+      try {
+        console.error("Connection failed JSON:", JSON.stringify(error));
+      } catch {
+        // ignore JSON stringify errors
+      }
 
-    restoreConnection();
+      // Always rethrow an Error instance so callers get a consistent shape
+      throw error instanceof Error
+        ? error
+        : new Error(error?.message || "Wallet connection failed");
+    }
+  }, [handleWalletSelection]);
+
+  const disconnect = useCallback(async () => {
+    await getKitInstance().disconnect();
+    setConnected(false);
+    setPublicKey(undefined);
+    setWalletName(undefined);
+    setBalances([]);
+    localStorage.clear();
   }, []);
 
-  // Connect to a specific wallet directly
-  const connectWallet = async (walletType: 'freighter' | 'albedo' | 'lobstr') => {
+  const refreshBalances = useCallback(async () => {
+    if (!publicKey) return;
     try {
-      setIsLoading(true);
-      
-      const walletId = WALLET_IDS[walletType];
-      
-      // Set the wallet directly
-      kit.setWallet(walletId);
-      
-      // Get public key from the wallet
-      const { address } = await kit.getAddress();
-      
-      // Save to state and localStorage
-      setPublicKey(address);
-      setIsConnected(true);
-      localStorage.setItem("walletPublicKey", address);
-      localStorage.setItem("walletId", walletId);
-      localStorage.setItem("walletType", walletType);
-      
-    } catch (error) {
-      console.error(`Failed to connect to ${walletType}:`, error);
-      throw error;
-    } finally {
-      setIsLoading(false);
+      const account = await server.accounts().accountId(publicKey).call();
+      setBalances(account.balances);
+    } catch (e) {
+      setBalances([]);
     }
-  };
-
-  // Connect with modal (fallback)
-  const connect = async () => {
-    try {
-      setIsLoading(true);
-      
-      // Open wallet selection modal
-      await kit.openModal({
-        onWalletSelected: async (option) => {
-          try {
-            // Set the selected wallet
-            kit.setWallet(option.id);
-            
-            // Get public key from the wallet
-            const { address } = await kit.getAddress();
-            
-            // Save to state and localStorage
-            setPublicKey(address);
-            setIsConnected(true);
-            localStorage.setItem("walletPublicKey", address);
-            localStorage.setItem("walletId", option.id);
-          } catch (err) {
-            console.error("Wallet connection error:", err);
-            throw err;
-          }
-        },
-      });
-    } catch (error) {
-      console.error("Failed to connect wallet:", error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const disconnect = () => {
-    setPublicKey(null);
-    setIsConnected(false);
-    localStorage.removeItem("walletPublicKey");
-    localStorage.removeItem("walletId");
-    localStorage.removeItem("walletType");
-  };
+  }, [publicKey, server]);
 
   return (
-    <WalletContext.Provider
-      value={{ isConnected, publicKey, connect, connectWallet, disconnect, isLoading }}
-    >
-      {children}
-    </WalletContext.Provider>
+    <WalletConfigContext.Provider value={{ horizonUrl, network }}>
+      <WalletContext.Provider value={{ connected, publicKey, walletName, balances, connect, disconnect, refreshBalances }}>
+        {children}
+      </WalletContext.Provider>
+    </WalletConfigContext.Provider>
   );
 }
 
-export function useWallet() {
+export const useWallet = () => {
   const context = useContext(WalletContext);
-  if (context === undefined) {
-    throw new Error("useWallet must be used within a WalletProvider");
-  }
+  if (!context) throw new Error('useWallet must be used within WalletProvider');
   return context;
-}
+};
