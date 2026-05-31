@@ -9,12 +9,13 @@ interface JobDetailsPageProps {
 }
    
 
-const getJob = (id: number) => jobs.find((job) => job.id === id);
+const getJob = (id: number) => jobs.find((job) => job.id == id);
 
 export default function JobDetailsPage({ params }: JobDetailsPageProps) {
   const job = getJob(params.id);
 
   if (!job) {
+    
     notFound();
   }
 
