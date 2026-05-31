@@ -7,6 +7,7 @@ interface JobDetailsPageProps {
     id: string;
   };
 }
+ 
 
 const getJob = (id: string) => 
   jobs.find((job) => String(job.id).toLowerCase() === decodeURIComponent(id).toLowerCase());
