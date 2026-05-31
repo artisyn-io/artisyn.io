@@ -65,7 +65,7 @@ export function SearchGridSection() {
           transition={{ duration: 0.5 }}
           className="text-[48px]/15 font-bold text-[#262626] text-center max-w-150 mx-auto mb-12"
         >
-          Skilled Artisans Across Every Category
+          Skilled
         </motion.h2>
 
         <motion.div
