@@ -8,7 +8,8 @@ interface JobDetailsPageProps {
   };
 }
 
-const getJob = (id: string) => jobs.find((job) => job.id === id);
+const getJob = (id: string) => 
+  jobs.find((job) => String(job.id).toLowerCase() === decodeURIComponent(id).toLowerCase());
 
 export default function JobDetailsPage({ params }: JobDetailsPageProps) {
   const job = getJob(params.id);
