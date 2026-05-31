@@ -7,7 +7,7 @@ interface JobDetailsPageProps {
     id: number;
   };
 }
- 
+   
 
 const getJob = (id: number) => jobs.find((job) => job.id === id);
 
