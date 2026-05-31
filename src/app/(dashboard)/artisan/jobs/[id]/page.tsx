@@ -4,13 +4,12 @@ import { jobs } from "../../listings/dummyjobs";
 
 interface JobDetailsPageProps {
   params: {
-    id: string;
+    id: number;
   };
 }
  
 
-const getJob = (id: string) => 
-  jobs.find((job) => String(job.id).toLowerCase() === decodeURIComponent(id).toLowerCase());
+const getJob = (id: number) => jobs.find((job) => job.id === id);
 
 export default function JobDetailsPage({ params }: JobDetailsPageProps) {
   const job = getJob(params.id);
