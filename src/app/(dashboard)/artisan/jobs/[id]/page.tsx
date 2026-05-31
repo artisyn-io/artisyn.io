@@ -15,7 +15,6 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
   const job = getJob(params.id);
 
   if (!job) {
-    
     notFound();
   }
 
