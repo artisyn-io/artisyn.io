@@ -17,6 +17,7 @@ export default function JobDetailsPage({ params }: JobDetailsPageProps) {
   // if (!job) {
   //   notFound();
   // }
+  
 
   return (
     <main className="my-8 px-4">
