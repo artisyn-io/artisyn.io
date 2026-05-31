@@ -11,7 +11,7 @@ export default function Home() {
     <main className="min-h-screen">
       {/* Spacer for potential Hero section */}
       <div className="h-20" />
-      <SearchGridSection />
+      {/* <SearchGridSection /> */}
       <div className="bg-white">
         <CraftmanshipSection />
         <TestimonialSlider />
