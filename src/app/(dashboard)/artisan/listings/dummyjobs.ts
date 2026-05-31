@@ -1,4 +1,5 @@
 export interface Job {
+  id: string;
   title: string;
   category: string;
   budget: string;
@@ -10,6 +11,7 @@ export interface Job {
 
 export const jobs: Job[] = [
   {
+    id: "plumber",
     title: "Plumber",
     category: "Home Services",
     budget: "₦15,000 - ₦30,000",
@@ -20,6 +22,7 @@ export const jobs: Job[] = [
     icon: "FiTool",
   },
   {
+    id: "tailor",
     title: "Tailor",
     category: "Fashion & Tailoring",
     budget: "₦10,000 - ₦25,000",
@@ -30,6 +33,7 @@ export const jobs: Job[] = [
     icon: "FiScissors",
   },
   {
+    id: "mechanic",
     title: "Mechanic",
     category: "Auto Repair",
     budget: "₦20,000 - ₦50,000",
@@ -40,6 +44,7 @@ export const jobs: Job[] = [
     icon: "FiTruck",
   },
   {
+    id: "electrician",
     title: "Electrician",
     category: "Home Services",
     budget: "₦12,000 - ₦35,000",
@@ -50,6 +55,7 @@ export const jobs: Job[] = [
     icon: "FiZap",
   },
   {
+    id: "barber",
     title: "Barber",
     category: "Personal Care",
     budget: "₦12,000 - ₦35,000",
@@ -60,6 +66,7 @@ export const jobs: Job[] = [
     icon: "FiScissors",
   },
   {
+    id: "teacher",
     title: "Teacher",
     category: "Education",
     budget: "₦12,000 - ₦35,000",
