@@ -19,7 +19,7 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
     notFound();
   }
 
-  
+
   return (
     <main className="my-8 px-4">
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -103,7 +103,6 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
           <button
             type="button"
             className="w-full rounded-2xl bg-[#4338CA] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3730a3]"
-            onClick={() => alert("Apply flow not implemented yet.")}
           >
             Apply now
           </button>
