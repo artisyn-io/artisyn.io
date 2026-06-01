@@ -109,5 +109,6 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
         </aside>
       </div>
     </main>
+    
   );
 }
