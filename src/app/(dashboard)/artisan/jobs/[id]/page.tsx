@@ -3,16 +3,17 @@ import { notFound } from "next/navigation";
 import { jobs } from "../../listings/dummyjobs";
 
 interface JobDetailsPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
    
 
 const getJob = (id: string) => jobs.find((job) => String(job.id) === id);
 
-export default function JobDetailsPage({ params }: JobDetailsPageProps) {
-  const job = getJob(params.id);
+export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
+  const resolvedParams = await params;
+  const job = getJob(resolvedParams.id);
 
   if (!job) {
     notFound();
