@@ -12,6 +12,7 @@ interface JobDetailsPageProps {
 const getJob = (id: string) => 
   jobs.find((job) => String(job.id).toLowerCase() === decodeURIComponent(id).toLowerCase());
 
+
 export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
   const resolvedParams = await params;
   const job = getJob(resolvedParams.id);
