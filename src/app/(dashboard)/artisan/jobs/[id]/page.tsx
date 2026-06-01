@@ -9,7 +9,8 @@ interface JobDetailsPageProps {
 }
    
 
-const getJob = (id: string) => jobs.find((job) => String(job.id) === id);
+const getJob = (id: string) => 
+  jobs.find((job) => String(job.id).toLowerCase() === decodeURIComponent(id).toLowerCase());
 
 export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
   const resolvedParams = await params;
@@ -102,7 +103,6 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
           <button
             type="button"
             className="w-full rounded-2xl bg-[#4338CA] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3730a3]"
-            onClick={() => alert("Apply flow not implemented yet.")}
           >
             Apply now
           </button>
