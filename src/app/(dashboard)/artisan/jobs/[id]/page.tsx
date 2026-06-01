@@ -18,7 +18,6 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
   if (!job) {
     return notFound();
   }
-
   
   return (
     <main className="my-8 px-4">
