@@ -29,6 +29,7 @@ const JobCard = () => {
     urgency: string | null;
   }>({ search: "", role: null, urgency: null });
 
+
   
   useEffect(() => {
     const fetchJobs = async () => {
