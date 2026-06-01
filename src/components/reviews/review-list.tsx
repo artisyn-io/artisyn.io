@@ -1,9 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Star } from "lucide-react";
+import { Star, Flag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ReviewReportModal } from "./review-report-modal";
 
 export type ReviewRating = 1 | 2 | 3 | 4 | 5;
 
@@ -66,6 +67,8 @@ function Stars({ rating }: { rating: ReviewRating }) {
 }
 
 function ReviewCard({ review }: { review: Review }) {
+	const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
 	return (
 		<article className="rounded-lg border border-slate-200 bg-white p-5">
 			<header className="flex items-start justify-between gap-4">
@@ -89,6 +92,23 @@ function ReviewCard({ review }: { review: Review }) {
 			<p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-slate-700">
 				{review.comment}
 			</p>
+
+			<div className="mt-4 flex justify-end">
+				<button
+					onClick={() => setIsReportModalOpen(true)}
+					className="flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-600 transition-colors"
+					aria-label="Report review"
+				>
+					<Flag className="h-3 w-3" />
+					Report
+				</button>
+			</div>
+
+			<ReviewReportModal
+				isOpen={isReportModalOpen}
+				onClose={() => setIsReportModalOpen(false)}
+				reviewId={review.id}
+			/>
 		</article>
 	);
 }

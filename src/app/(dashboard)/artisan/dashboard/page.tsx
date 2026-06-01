@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import bgImg from "../listings/(assets)/bg.png";
 import { jobs } from "../listings/dummyjobs";
+import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 
 export default function ArtisanDashboard() {
 	// Mock data for earnings and metrics
@@ -121,6 +122,11 @@ export default function ArtisanDashboard() {
 											<p className="text-xs text-gray-500 mb-1">
 												Posted 1 min ago
 											</p>
+											<JobStatusBadge
+												status="available"
+												size="sm"
+												className="mb-2"
+											/>
 											<h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
 												{job.shortDescription}
 											</h3>
@@ -227,6 +233,12 @@ export default function ArtisanDashboard() {
 											<p className="text-xs text-gray-500 mb-1">
 												Started 1 day ago
 											</p>
+											<JobStatusBadge
+												status="active"
+												size="sm"
+												variant="outline"
+												className="mb-2"
+											/>
 											<h3 className="font-semibold text-gray-900 text-sm line-clamp-2">
 												{job.shortDescription}
 											</h3>

@@ -6,6 +6,7 @@ import { jobs } from "../dummyjobs";
 import Image from "next/image";
 import bgImg from "../(assets)/bg.png";
 import JobFilter from "./JobFilters";
+import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 
 const JobCard = () => {
   const [filteredJobs, setFilteredJobs] = useState(jobs);

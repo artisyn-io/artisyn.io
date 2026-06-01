@@ -1,16 +1,19 @@
-"use client";
-import { motion } from "framer-motion";
-import { BadgeCheck, Crown, MapPin } from "lucide-react";
-import { artisanProps } from "../../features/landing-page/search-grid-section";
+'use client';
+
+import { BadgeCheck, Crown, MapPin } from 'lucide-react';
+
+import { artisanProps } from '../../features/landing-page/search-grid-section';
+import { motion } from 'framer-motion';
 
 export function ArtisanCard({ artisan }: { artisan: artisanProps }) {
   const bg = artisan.image;
 
   return (
-    <motion.div
-      style={{ "--bg-image": `url(${bg})` } as React.CSSProperties}
+    <motion.a
+      href={`/artisans/${artisan.id}`}
+      style={{ '--bg-image': `url(${bg})` } as React.CSSProperties}
       className="shadow-md hover:cursor-pointer bg-(image:--bg-image) bg-center bg-cover relative flex flex-col justify-end h-72 max-w-62 w-full rounded-xl p-3 overflow-hidden group"
-      whileHover={{ boxShadow: "0 20px 25px -5px rgb(96, 93, 236, 0.3)" }}
+      whileHover={{ boxShadow: '0 20px 25px -5px rgb(96, 93, 236, 0.3)' }}
       transition={{ duration: 0.3 }}
     >
       <motion.div
@@ -45,12 +48,12 @@ export function ArtisanCard({ artisan }: { artisan: artisanProps }) {
       >
         <motion.h3
           className="flex items-center gap-1 text-[#020817] text-base font-bold"
-          whileHover={{ color: "#605DEC" }}
+          whileHover={{ color: '#605DEC' }}
         >
           {artisan.name}
           <motion.div
             whileHover={{ scale: 1.2, rotate: 10 }}
-            transition={{ type: "spring", stiffness: 400 }}
+            transition={{ type: 'spring', stiffness: 400 }}
           >
             <BadgeCheck className="text-[#605DEC] size-4" />
           </motion.div>
@@ -74,6 +77,6 @@ export function ArtisanCard({ artisan }: { artisan: artisanProps }) {
           <MapPin className="text-[#64748B] size-4" /> {artisan.location}
         </motion.p>
       </motion.div>
-    </motion.div>
+    </motion.a>
   );
 }

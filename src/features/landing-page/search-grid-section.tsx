@@ -1,9 +1,6 @@
-"use client";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArtisanGrid } from "./artisan-grid";
-import { ArtisanSearch } from "./artisan-search";
-import { ArtisanBadge } from "../../components/artisan/artisan-badge";
-import { CleanerIcon } from "../../icons";
+'use client';
+
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   Car,
   ChefHat,
@@ -14,10 +11,16 @@ import {
   Scissors,
   Shirt,
   Wrench,
-} from "lucide-react";
-import { useState } from "react";
+} from 'lucide-react';
+
+import { ArtisanBadge } from '../../components/artisan/artisan-badge';
+import { ArtisanGrid } from './artisan-grid';
+import { ArtisanSearch } from './artisan-search';
+import { CleanerIcon } from '../../icons';
+import { useState } from 'react';
 
 export type artisanProps = {
+  id?: string;
   name: string;
   category: string;
   location: string;
@@ -32,8 +35,8 @@ export type categoryProps = {
 };
 
 export function SearchGridSection() {
-  const [activeCategory, setActiveCategory] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -45,10 +48,10 @@ export function SearchGridSection() {
 
   const filteredArtisansByCategoryAndSearch = artisans.filter((artisan) => {
     const categoryMatch =
-      activeCategory === "" || artisan.category === activeCategory;
+      activeCategory === '' || artisan.category === activeCategory;
 
     const searchMatch =
-      searchTerm === "" ||
+      searchTerm === '' ||
       artisan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       artisan.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
       artisan.location.toLowerCase().includes(searchTerm.toLowerCase());
@@ -59,7 +62,7 @@ export function SearchGridSection() {
     <section className="p-4 bg-white pt-35">
       <div className="max-w-260 mx-auto mb-18">
         <motion.h2
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
@@ -69,7 +72,7 @@ export function SearchGridSection() {
         </motion.h2>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -79,7 +82,7 @@ export function SearchGridSection() {
         </motion.div>
 
         <motion.div
-          initial="hidden"
+          initial={false}
           whileInView="visible"
           viewport={{ once: true }}
           variants={{
@@ -105,7 +108,7 @@ export function SearchGridSection() {
                   scale: 1,
                   transition: {
                     duration: 0.4,
-                    ease: "easeOut",
+                    ease: 'easeOut',
                   },
                 },
               }}
@@ -127,7 +130,7 @@ export function SearchGridSection() {
           {filteredArtisansByCategoryAndSearch.length === 0 ? (
             <motion.p
               key="no-results"
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={false}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
@@ -138,7 +141,7 @@ export function SearchGridSection() {
           ) : (
             <motion.div
               key="results"
-              initial={{ opacity: 0 }}
+              initial={false}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}
@@ -149,7 +152,7 @@ export function SearchGridSection() {
         </AnimatePresence>
       </div>
       <motion.button
-        initial={{ opacity: 0, y: 20 }}
+        initial={false}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         whileHover={{ scale: 1.05, y: -2 }}
@@ -164,77 +167,85 @@ export function SearchGridSection() {
 }
 
 const categoryArtisans = [
-  { name: "Plumber", icon: <Wrench className="text-[#DC2626] size-6" /> },
-  { name: "Barber", icon: <Scissors className="text-[#9333EA] size-6" /> },
-  { name: "Painter", icon: <Paintbrush className="text-[#CA8A04] size-6" /> },
-  { name: "Electrician", icon: <Plug className="text-[#DC2626] size-6" /> },
-  { name: "Carpenter", icon: <Hammer className="text-[#16A34A] size-6" /> },
-  { name: "Mechanic", icon: <Car className="text-[#EA580C] size-6" /> },
-  { name: "Tech Repair", icon: <Laptop className="text-[#4F46E5] size-6" /> },
-  { name: "Tailor", icon: <Shirt className="text-[#DB2777] size-6" /> },
-  { name: "Chef", icon: <ChefHat className="text-[#974925] size-6" /> },
-  { name: "Cleaner", icon: <CleanerIcon /> },
+  { name: 'Plumber', icon: <Wrench className="text-[#DC2626] size-6" /> },
+  { name: 'Barber', icon: <Scissors className="text-[#9333EA] size-6" /> },
+  { name: 'Painter', icon: <Paintbrush className="text-[#CA8A04] size-6" /> },
+  { name: 'Electrician', icon: <Plug className="text-[#DC2626] size-6" /> },
+  { name: 'Carpenter', icon: <Hammer className="text-[#16A34A] size-6" /> },
+  { name: 'Mechanic', icon: <Car className="text-[#EA580C] size-6" /> },
+  { name: 'Tech Repair', icon: <Laptop className="text-[#4F46E5] size-6" /> },
+  { name: 'Tailor', icon: <Shirt className="text-[#DB2777] size-6" /> },
+  { name: 'Chef', icon: <ChefHat className="text-[#974925] size-6" /> },
+  { name: 'Cleaner', icon: <CleanerIcon /> },
 ];
 
 const artisans = [
   {
-    name: "James Emeka",
-    image: "/images/image3.jpg",
-    category: "Plumber",
-    location: "Ikeja, Lagos.",
+    id: 'james-emeka',
+    name: 'James Emeka',
+    image: '/images/image3.jpg',
+    category: 'Plumber',
+    location: 'Ikeja, Lagos.',
     icon: <Wrench className="text-[#DC2626] size-4" />,
   },
   {
-    name: "Jane Smith",
-    image: "/images/image2.jpg",
-    category: "Barber",
-    location: "Yaba, Lagos.",
+    id: 'jane-smith',
+    name: 'Jane Smith',
+    image: '/images/image2.jpg',
+    category: 'Barber',
+    location: 'Yaba, Lagos.',
     icon: <Scissors className="text-[#9333EA] size-4" />,
     rate: true,
   },
   {
-    name: "Grace Fixer",
-    image: "/images/image3.jpg",
-    category: "Painter",
-    location: "Surulere, Lagos.",
+    id: 'grace-fixer',
+    name: 'Grace Fixer',
+    image: '/images/image3.jpg',
+    category: 'Painter',
+    location: 'Surulere, Lagos.',
     icon: <Paintbrush className="text-[#CA8A04] size-4" />,
     rate: true,
   },
   {
-    name: "Amara Chike",
-    image: "/images/image5.jpg",
-    category: "Electrician",
-    location: "Ajah, Lagos.",
+    id: 'amara-chike',
+    name: 'Amara Chike',
+    image: '/images/image5.jpg',
+    category: 'Electrician',
+    location: 'Ajah, Lagos.',
     icon: <Plug className="text-[#DC2626] size-4" />,
   },
   {
-    name: "Carpenter",
-    image: "/images/image4.jpg",
-    category: "Carpenter",
-    location: "Ikeja, Lagos.",
+    id: 'carpenter',
+    name: 'Carpenter',
+    image: '/images/image4.jpg',
+    category: 'Carpenter',
+    location: 'Ikeja, Lagos.',
     icon: <Hammer className="text-[#16A34A] size-4" />,
     rate: true,
   },
   {
-    name: "Amara Chike",
-    image: "/images/image3.jpg",
-    category: "Mechanic",
-    location: "Ajah, Lagos.",
+    id: 'amara-chike-1',
+    name: 'Amara Chike',
+    image: '/images/image3.jpg',
+    category: 'Mechanic',
+    location: 'Ajah, Lagos.',
     icon: <Car className="text-[#EA580C] size-4" />,
     rate: true,
   },
   {
-    name: "Sofia Okafor",
-    image: "/images/image2.jpg",
-    category: "Chef",
-    location: "Lekki, Lagos.",
+    id: 'sofia-okafor',
+    name: 'Sofia Okafor',
+    image: '/images/image2.jpg',
+    category: 'Chef',
+    location: 'Lekki, Lagos.',
     icon: <ChefHat className="text-[#974925] size-4" />,
   },
   {
-    name: "John Doe",
-    image: "/images/image1.jpg",
-    category: "Cleaner",
-    location: "Lekki, Lagos.",
+    id: 'john-doe',
+    name: 'John Doe',
+    image: '/images/image1.jpg',
+    category: 'Cleaner',
+    location: 'Lekki, Lagos.',
     icon: <CleanerIcon size={16} />,
     rate: true,
   },
