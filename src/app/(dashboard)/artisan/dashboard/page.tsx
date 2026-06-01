@@ -1,13 +1,50 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import bgImg from "../listings/(assets)/bg.png";
-import { jobs } from "../listings/dummyjobs";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 
+interface AvailableJob {
+	id: string;
+	title: string;
+	category: string;
+	budget: string;
+	location: string;
+	shortDescription: string;
+	urgency: "low" | "medium" | "high";
+	icon: string;
+}
+
 export default function ArtisanDashboard() {
+	const [availableJobs, setAvailableJobs] = useState<AvailableJob[]>([]);
+	const [loadingJobs, setLoadingJobs] = useState(true);
+	const [jobError, setJobError] = useState<string | null>(null);
+
+	useEffect(() => {
+		const fetchAvailableJobs = async () => {
+			setLoadingJobs(true);
+			try {
+				const response = await fetch("/api/jobs/listings", {
+					cache: "no-store",
+				});
+				if (!response.ok) {
+					throw new Error("Failed to load available jobs");
+				}
+				const data = await response.json();
+				setAvailableJobs(data.jobs ?? []);
+			} catch (error) {
+				console.error(error);
+				setJobError("Unable to load available jobs.");
+			} finally {
+				setLoadingJobs(false);
+			}
+		};
+
+		fetchAvailableJobs();
+	}, []);
+
 	// Mock data for earnings and metrics
 	const mockData = {
 		totalEarnings: "₦120,000.00",
@@ -20,11 +57,10 @@ export default function ArtisanDashboard() {
 		proposalResponseRate: 95,
 	};
 
-	// Sample active jobs
-	const activeJobsData = jobs.slice(0, 2);
+	// Sample active jobs from live available data
+	const activeJobsData = availableJobs.slice(0, 2);
 
-	// Sample available jobs
-	const availableJobsPreview = jobs.slice(0, 4);
+	const availableJobsPreview = availableJobs.slice(0, 4);
 
 	return (
 		<div className="w-full">
