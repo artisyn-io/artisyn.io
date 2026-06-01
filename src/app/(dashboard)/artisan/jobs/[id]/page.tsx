@@ -14,9 +14,9 @@ const getJob = (id: string) => jobs.find((job) => String(job.id) === id);
 export default function JobDetailsPage({ params }: JobDetailsPageProps) {
   const job = getJob(params.id);
 
-  // if (!job) {
-  //   notFound();
-  // }
+  if (!job) {
+    notFound();
+  }
 
   return (
     <main className="my-8 px-4">
