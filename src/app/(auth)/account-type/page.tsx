@@ -76,7 +76,7 @@ const AccountType = () => {
             className="w-full lg:w-auto bg-[#605DEC] py-3 px-8 rounded-lg mt-10 cursor-pointer hover:bg-[#605DEC]/80 text-white disabled:cursor-not-allowed disabled:bg-[#605DEC]/80 transition-colors"
             disabled={!selectedAccountType}
           >
-            <Link href="/setup-profile">
+            <Link href="/profile-setup">
               {" "}
               Continue as{" "}
               {selectedAccountType === "I'm an artisian "

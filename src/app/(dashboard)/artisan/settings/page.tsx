@@ -20,7 +20,8 @@ import {
   Smartphone,
   Calendar,
   Save,
-  Eye
+  Eye,
+  UserX
 } from "lucide-react";
 
 // Inline SVGs for social providers to guarantee error-free rendering and custom coloring
@@ -117,6 +118,13 @@ interface NotificationPreferences {
   digest: "none" | "daily" | "weekly";
 }
 
+interface BlockedUser {
+  id: string;
+  name: string;
+  username?: string;
+  blockedAt?: string;
+}
+
 const DEFAULT_PREFERENCES: NotificationPreferences = {
   email: {
     jobAlerts: true,
@@ -179,6 +187,11 @@ export default function SettingsPage() {
   });
   const [privacyLoading, setPrivacyLoading] = useState(true);
   const [privacySaving, setPrivacySaving] = useState(false);
+  const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([]);
+  const [blocklistLoading, setBlocklistLoading] = useState(true);
+  const [unblockLoadingId, setUnblockLoadingId] = useState<string | null>(null);
+
+  const BLOCKLIST_STORAGE_KEY = "artisan-privacy-blocklist";
 
   // Fetch providers, notifications and privacy on mount
   useEffect(() => {
@@ -267,9 +280,55 @@ export default function SettingsPage() {
       }
     };
 
+    const fetchBlocklist = async () => {
+      const blocklistEndpoints = ["/api/user/privacy/blocklist", "/api/privacy/blocklist"];
+
+      try {
+        setBlocklistLoading(true);
+        let data: unknown = [];
+        let resolved = false;
+
+        for (const endpoint of blocklistEndpoints) {
+          const response = await fetch(endpoint, { cache: "no-store" });
+          if (!response.ok) {
+            continue;
+          }
+          data = await response.json();
+          resolved = true;
+          break;
+        }
+
+        if (!resolved) {
+          throw new Error("Failed to fetch blocklist");
+        }
+
+        if (Array.isArray(data)) {
+          setBlockedUsers(data as BlockedUser[]);
+          localStorage.setItem(BLOCKLIST_STORAGE_KEY, JSON.stringify(data));
+          return;
+        }
+
+        setBlockedUsers([]);
+      } catch {
+        const stored = localStorage.getItem(BLOCKLIST_STORAGE_KEY);
+        if (stored) {
+          try {
+            setBlockedUsers(JSON.parse(stored) as BlockedUser[]);
+          } catch {
+            setBlockedUsers([]);
+          }
+        } else {
+          setBlockedUsers([]);
+        }
+      } finally {
+        setBlocklistLoading(false);
+      }
+    };
+
     fetchAccounts();
     fetchPreferences();
     fetchPrivacySettings();
+    fetchBlocklist();
   }, []);
 
   // Helper to trigger toast notifications
@@ -480,6 +539,59 @@ export default function SettingsPage() {
       showToast("Error saving settings. Please try again.", "error");
     } finally {
       setPrivacySaving(false);
+    }
+  };
+
+  const handleUnblockUser = async (userId: string) => {
+    const previousBlocklist = blockedUsers;
+    const targetUser = previousBlocklist.find((user) => user.id === userId);
+
+    if (!targetUser) {
+      return;
+    }
+
+    setUnblockLoadingId(userId);
+    setBlockedUsers((prev) => prev.filter((user) => user.id !== userId));
+
+    try {
+      const unblockAttempts = [
+        {
+          endpoint: `/api/user/privacy/blocklist/${userId}`,
+          options: { method: "DELETE" },
+        },
+        {
+          endpoint: "/api/user/privacy/blocklist",
+          options: {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId }),
+          },
+        },
+      ];
+
+      let unblocked = false;
+      for (const attempt of unblockAttempts) {
+        const response = await fetch(attempt.endpoint, attempt.options);
+        if (response.ok) {
+          unblocked = true;
+          break;
+        }
+      }
+
+      if (!unblocked) {
+        throw new Error("Unable to unblock user");
+      }
+
+      localStorage.setItem(
+        BLOCKLIST_STORAGE_KEY,
+        JSON.stringify(previousBlocklist.filter((user) => user.id !== userId)),
+      );
+      showToast(`${targetUser.name} has been unblocked.`, "success");
+    } catch {
+      setBlockedUsers(previousBlocklist);
+      showToast("Failed to unblock user. Please try again.", "error");
+    } finally {
+      setUnblockLoadingId(null);
     }
   };
 
@@ -1022,6 +1134,81 @@ export default function SettingsPage() {
                         </button>
                       </div>
                     </form>
+                  )}
+                </div>
+
+                <div className="border-t border-gray-200 px-6 py-6 bg-gray-50/40">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <h3 className="text-base font-bold text-gray-900">Blocked users</h3>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Users on this list cannot interact with you until you unblock them.
+                      </p>
+                    </div>
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
+                      {blockedUsers.length} Blocked
+                    </span>
+                  </div>
+
+                  {blocklistLoading ? (
+                    <div className="flex items-center gap-2 text-sm text-gray-500 py-3">
+                      <Loader2 className="w-4 h-4 animate-spin text-[#605DEC]" />
+                      Loading blocked users...
+                    </div>
+                  ) : blockedUsers.length === 0 ? (
+                    <div className="rounded-xl border border-dashed border-gray-300 bg-white p-6 text-center">
+                      <UserX className="w-6 h-6 text-gray-400 mx-auto mb-2" />
+                      <p className="text-sm font-semibold text-gray-700">No blocked users</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Your blocklist is empty.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-3 text-left text-xs font-semibold tracking-wide text-gray-600 uppercase">
+                              User
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold tracking-wide text-gray-600 uppercase">
+                              Blocked on
+                            </th>
+                            <th className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-600 uppercase">
+                              Action
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          {blockedUsers.map((blockedUser) => (
+                            <tr key={blockedUser.id}>
+                              <td className="px-4 py-3">
+                                <div className="text-sm font-semibold text-gray-900">{blockedUser.name}</div>
+                                {blockedUser.username ? (
+                                  <div className="text-xs text-gray-500">@{blockedUser.username}</div>
+                                ) : null}
+                              </td>
+                              <td className="px-4 py-3 text-sm text-gray-600">
+                                {blockedUser.blockedAt || "Unknown"}
+                              </td>
+                              <td className="px-4 py-3 text-right">
+                                <button
+                                  type="button"
+                                  onClick={() => handleUnblockUser(blockedUser.id)}
+                                  disabled={unblockLoadingId === blockedUser.id}
+                                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-indigo-200 text-[#605DEC] text-xs font-semibold hover:bg-indigo-50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                >
+                                  {unblockLoadingId === blockedUser.id ? (
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  ) : null}
+                                  Unblock
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   )}
                 </div>
               </motion.div>

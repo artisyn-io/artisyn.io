@@ -227,7 +227,7 @@ export default async function ArtisanProfilePage({
               />
             </div>
           </div>
-          <ReviewList reviews={artisan.reviews} />
+          <ReviewList reviews={artisan.reviews} isCurator={false} />
         </div>
       </section>
     </main>
