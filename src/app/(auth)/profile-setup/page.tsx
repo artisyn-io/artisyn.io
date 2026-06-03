@@ -1,6 +1,6 @@
 "use client";
 import { AccountTypeSelection } from "@/components/artisan/account-type-selection";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArtisanProfileStep1 } from "@/components/artisan/artisan-profile-step1";
@@ -80,6 +80,7 @@ export default function Page() {
   const [artisanData, setArtisanData] = useState<ArtisanFormData>(
     initialState.artisanData,
   );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Save state whenever it changes
   useEffect(() => {
@@ -168,11 +169,54 @@ export default function Page() {
     setCurrentStep("artisan-step2");
   };
 
-  const handleArtisanStep2Complete = (data: Partial<ArtisanFormData>) => {
-    setArtisanData((prev) => ({ ...prev, ...data }));
-    setCurrentStep("success");
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("artisan-onboarding-state");
+  const handleArtisanStep2Complete = async (data: Partial<ArtisanFormData>) => {
+
+    // Return if app is already in loading state.
+    if(isLoading) return;
+
+    // Use merged local object to handle async React state updates.
+    const updatedArtisanData = {...artisanData, ...data};
+
+    setArtisanData(updatedArtisanData);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedArtisanData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to save profile data.');
+      }
+
+      const responseData = await response.json();
+      console.log('Profile saved successfully:', responseData);
+
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("artisan-onboarding-state");
+      }
+
+      setCurrentStep("success");
+
+      setTimeout(() => {
+        setArtisanData(initialState.artisanData);
+      }, 2000);
+
+    } catch (error) {
+      console.error('Error saving profile data:', error);
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : 'An error occurred while saving profile data to server. Please try again.';
+      
+        console.error("Error message:", errorMessage);
+
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -1,7 +1,8 @@
 "use client";
-
 import { useState, Suspense } from "react";
 import Link from "next/link";
+import { useWallet } from "@/context/WalletProvider";
+import type { Job } from "../dummyjobs";
 import { jobs } from "../dummyjobs";
 import Image from "next/image";
 import bgImg from "../(assets)/bg.png";
@@ -10,6 +11,43 @@ import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 
 const JobCard = () => {
   const [filteredJobs, setFilteredJobs] = useState(jobs);
+  const { publicKey, connected } = useWallet();
+  const [statusMap, setStatusMap] = useState<Record<number, { state: string; message?: string }>>({});
+
+  const applyToJob = async (job: Job, idx: number) => {
+    if (!connected || !publicKey) {
+      setStatusMap((s) => ({ ...s, [idx]: { state: "error", message: "Connect your wallet to apply." } }));
+      return;
+    }
+
+    setStatusMap((s) => ({ ...s, [idx]: { state: "loading" } }));
+
+    try {
+      const payload = {
+        jobTitle: job.title,
+        jobShortDescription: job.shortDescription,
+        location: job.location,
+        applicant: publicKey,
+      };
+
+      const res = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.status === 201) {
+        setStatusMap((s) => ({ ...s, [idx]: { state: "success", message: "Application submitted." } }));
+      } else if (res.status === 409) {
+        setStatusMap((s) => ({ ...s, [idx]: { state: "duplicate", message: "You have already applied." } }));
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setStatusMap((s) => ({ ...s, [idx]: { state: "error", message: data?.message || "Failed to submit application." } }));
+      }
+    } catch (err) {
+      setStatusMap((s) => ({ ...s, [idx]: { state: "error", message: "Network error." } }));
+    }
+  };
 
   const handleFilterChange = (filters: {
     search: string;

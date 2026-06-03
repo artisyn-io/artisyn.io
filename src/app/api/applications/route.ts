@@ -1,36 +1,65 @@
-import { NextResponse } from 'next/server';
+import { promises as fs } from 'fs';
+import path from 'path';
+
+interface Application {
+  id: string;
+  jobTitle: string;
+  applicant: string;
+  payload: unknown;
+  createdAt: string;
+  [key: string]: unknown;
+}
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { jobTitle, applicant } = body;
+    if (!jobTitle || !applicant) {
+      return new Response(JSON.stringify({ message: 'Missing required fields' }), { status: 400 });
+    }
+
+    const dataDir = path.join(process.cwd(), 'data');
+    const dataPath = path.join(dataDir, 'applications.json');
+    await fs.mkdir(dataDir, { recursive: true });
+
+    let apps: Application[] = [];
+    try {
+      const raw = await fs.readFile(dataPath, 'utf8');
+      apps = JSON.parse(raw || '[]') as Application[];
+    } catch {
+      apps = [];
+    }
+
+    const duplicate = apps.find((a) => a.jobTitle === jobTitle && a.applicant === applicant);
+    if (duplicate) {
+      return new Response(JSON.stringify({ message: 'Duplicate application' }), { status: 409 });
+    }
+
+    const record = {
+      id: `${Date.now()}`,
+      jobTitle,
+      applicant,
+      payload: body,
+      createdAt: new Date().toISOString(),
+    };
+
+    apps.push(record);
+    await fs.writeFile(dataPath, JSON.stringify(apps, null, 2), 'utf8');
+
+    return new Response(JSON.stringify(record), { status: 201 });
+  } catch {
+    return new Response(JSON.stringify({ message: 'Server error' }), { status: 500 });
+  }
+}
 
 export async function GET() {
-  // Mock applications data
-  const applications = [
-    {
-      id: "app_1",
-      jobId: "job_1",
-      jobTitle: "Senior Smart Contract Developer",
-      company: "DeFi Protocol",
-      state: "In Review",
-      appliedAt: "2026-05-20T10:00:00Z",
-      updatedAt: "2026-05-25T14:30:00Z"
-    },
-    {
-      id: "app_2",
-      jobId: "job_2",
-      jobTitle: "Frontend Web3 Engineer",
-      company: "NFT Marketplace",
-      state: "Interviewing",
-      appliedAt: "2026-05-15T09:00:00Z",
-      updatedAt: "2026-05-28T16:45:00Z"
-    },
-    {
-      id: "app_3",
-      jobId: "job_3",
-      jobTitle: "Fullstack Rust Developer",
-      company: "Layer 1 Foundation",
-      state: "Applied",
-      appliedAt: "2026-05-29T11:20:00Z",
-      updatedAt: "2026-05-29T11:20:00Z"
-    }
-  ];
+  try {
+    const dataPath = path.join(process.cwd(), 'data', 'applications.json');
+    const raw = await fs.readFile(dataPath, 'utf8');
+    const apps = JSON.parse(raw || '[]') as Application[];
+    return new Response(JSON.stringify(apps), { status: 200 });
+  } catch {
+    return new Response(JSON.stringify([]), { status: 200 });
+  }
 
-  return NextResponse.json({ applications });
 }

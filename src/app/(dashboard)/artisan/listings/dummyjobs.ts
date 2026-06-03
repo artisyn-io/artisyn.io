@@ -7,6 +7,7 @@ export interface Job {
   shortDescription: string;
   urgency: "low" | "medium" | "high";
   icon: string;
+  status: "available" | "active" | "applied" | "completed";
 }
 
 export const jobs: Job[] = [
@@ -20,6 +21,7 @@ export const jobs: Job[] = [
       "Fix leaking pipes and replace damaged bathroom fittings in a residential apartment.",
     urgency: "high",
     icon: "FiTool",
+    status: "available",
   },
   {
     id: "tailor",
@@ -31,6 +33,7 @@ export const jobs: Job[] = [
       "Sew a complete set of custom native attire for an upcoming family event.",
     urgency: "medium",
     icon: "FiScissors",
+    status: "active",
   },
   {
     id: "mechanic",
@@ -42,6 +45,7 @@ export const jobs: Job[] = [
       "Diagnose engine knocking sound and service a Toyota Corolla.",
     urgency: "high",
     icon: "FiTruck",
+    status: "active",
   },
   {
     id: "electrician",
@@ -53,6 +57,7 @@ export const jobs: Job[] = [
       "Fix faulty wiring and install new power sockets in a two-bedroom flat.",
     urgency: "low",
     icon: "FiZap",
+    status: "available",
   },
   {
     id: "barber",
@@ -64,6 +69,7 @@ export const jobs: Job[] = [
       "Provide haircuts, beard trims, and grooming services for clients in a professional setting.",
     urgency: "medium",
     icon: "FiScissors",
+    status: "applied",
   },
   {
     id: "teacher",
@@ -75,5 +81,6 @@ export const jobs: Job[] = [
       "Teach students literacy, numeracy, and other subjects at a local school.",
     urgency: "low",
     icon: "FiBriefcase",
+    status: "completed",
   },
 ];

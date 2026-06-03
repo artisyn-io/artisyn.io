@@ -1,11 +1,22 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import bgImg from "../listings/(assets)/bg.png";
-import { jobs } from "../listings/dummyjobs";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
+
+// Define types that match dummyjobs for compatibility
+interface Job {
+  title: string;
+  category: string;
+  budget: string;
+  location: string;
+  shortDescription: string;
+  urgency: "low" | "medium" | "high";
+  icon: string;
+  status: "available" | "active" | "applied" | "completed";
+}
 
 export default function ArtisanDashboard() {
 	// Mock data for earnings and metrics
@@ -20,11 +31,27 @@ export default function ArtisanDashboard() {
 		proposalResponseRate: 95,
 	};
 
-	// Sample active jobs
-	const activeJobsData = jobs.slice(0, 2);
+	// State for jobs
+  const [availableJobs, setAvailableJobs] = useState<Job[]>([]);
+  const [activeJobsData, setActiveJobsData] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
 
-	// Sample available jobs
-	const availableJobsPreview = jobs.slice(0, 4);
+  // Fetch jobs from API (placeholder - will be updated when API endpoints are ready)
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        // For now, since there's no API endpoint for available/active jobs, we'll use empty arrays
+        // This will be updated once the API is available
+        setAvailableJobs([]);
+        setActiveJobsData([]);
+      } catch (error) {
+        console.error("Failed to fetch jobs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJobs();
+  }, []);
 
 	return (
 		<div className="w-full">
@@ -103,50 +130,60 @@ export default function ArtisanDashboard() {
 
 						{/* Jobs List */}
 						<div className="divide-y divide-gray-200">
-							{availableJobsPreview.map((job, index) => (
-								<div key={index} className="p-4 hover:bg-gray-50 transition-colors">
-									<div className="flex gap-3">
-										{/* Job Image */}
-										<div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-											<Image
-												src={bgImg}
-												alt={job.title}
-												width={80}
-												height={80}
-												className="w-full h-full object-cover"
-											/>
-										</div>
+							{loading ? (
+								<div className="p-8 text-center text-sm text-gray-500">
+									Loading available jobs...
+								</div>
+							) : availableJobs.length === 0 ? (
+								<div className="p-8 text-center text-sm text-gray-500">
+									No available jobs at the moment
+								</div>
+							) : (
+								availableJobs.slice(0, 4).map((job, index) => (
+									<div key={index} className="p-4 hover:bg-gray-50 transition-colors">
+										<div className="flex gap-3">
+											{/* Job Image */}
+											<div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+												<Image
+													src={bgImg}
+													alt={job.title}
+													width={80}
+													height={80}
+													className="w-full h-full object-cover"
+												/>
+											</div>
 
-										{/* Job Details */}
-										<div className="flex-1 min-w-0">
-											<p className="text-xs text-gray-500 mb-1">
-												Posted 1 min ago
-											</p>
-											<JobStatusBadge
-												status="available"
-												size="sm"
-												className="mb-2"
-											/>
-											<h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-												{job.shortDescription}
-											</h3>
-											<div className="text-xs text-gray-600">
-												<div className="flex flex-wrap gap-2">
-													<span>Category: {job.category}</span>
-													<span>•</span>
-													<span>Compensation: {job.budget}</span>
-													<span>•</span>
-													<span>Location: {job.location}</span>
-													<span>•</span>
-													<span className="uppercase font-medium text-red-600">
-														{job.urgency}
-													</span>
+											{/* Job Details */}
+											<div className="flex-1 min-w-0">
+												<p className="text-xs text-gray-500 mb-1">
+													Posted 1 min ago
+												</p>
+												<JobStatusBadge
+													status="available"
+													size="sm"
+													className="mb-2"
+												/>
+												<h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
+													{job.shortDescription}
+												</h3>
+												<div className="text-xs text-gray-600">
+													<div className="flex flex-wrap gap-2">
+														<span>Category: {job.category}</span>
+														<span>•</span>
+														<span>Compensation: {job.budget}</span>
+														<span>•</span>
+														<span>Location: {job.location}</span>
+														<span>•</span>
+														<span className="uppercase font-medium text-red-600">
+															{job.urgency}
+														</span>
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							))}
+								))
+							)}
 						</div>
 					</div>
 				</div>
@@ -214,38 +251,48 @@ export default function ArtisanDashboard() {
 
 						{/* Jobs List */}
 						<div className="divide-y divide-gray-200">
-							{activeJobsData.map((job, index) => (
-								<div key={index} className="p-4 hover:bg-gray-50 transition-colors">
-									<div className="flex gap-3">
-										{/* Job Image */}
-										<div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
-											<Image
-												src={bgImg}
-												alt={job.title}
-												width={60}
-												height={60}
-												className="w-full h-full object-cover"
-											/>
-										</div>
+							{loading ? (
+								<div className="p-8 text-center text-sm text-gray-500">
+									Loading active jobs...
+								</div>
+							) : activeJobsData.length === 0 ? (
+								<div className="p-8 text-center text-sm text-gray-500">
+									No active jobs at the moment
+								</div>
+							) : (
+								activeJobsData.slice(0, 2).map((job, index) => (
+									<div key={index} className="p-4 hover:bg-gray-50 transition-colors">
+										<div className="flex gap-3">
+											{/* Job Image */}
+											<div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+												<Image
+													src={bgImg}
+													alt={job.title}
+													width={60}
+													height={60}
+													className="w-full h-full object-cover"
+												/>
+											</div>
 
-										{/* Job Info */}
-										<div className="flex-1 min-w-0">
-											<p className="text-xs text-gray-500 mb-1">
-												Started 1 day ago
-											</p>
-											<JobStatusBadge
-												status="active"
-												size="sm"
-												variant="outline"
-												className="mb-2"
-											/>
-											<h3 className="font-semibold text-gray-900 text-sm line-clamp-2">
-												{job.shortDescription}
-											</h3>
+											{/* Job Info */}
+											<div className="flex-1 min-w-0">
+												<p className="text-xs text-gray-500 mb-1">
+													Started 1 day ago
+												</p>
+												<JobStatusBadge
+													status="active"
+													size="sm"
+													variant="outline"
+													className="mb-2"
+												/>
+												<h3 className="font-semibold text-gray-900 text-sm line-clamp-2">
+													{job.shortDescription}
+												</h3>
+											</div>
 										</div>
 									</div>
-								</div>
-							))}
+								))
+							)}
 						</div>
 					</div>
 				</div>
