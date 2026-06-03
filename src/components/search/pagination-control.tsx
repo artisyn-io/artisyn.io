@@ -116,7 +116,7 @@ export function PaginationControl({
       <div className="flex items-center gap-2">
         <Button
           aria-label="Previous page"
-          className="size-10 rounded-xl border-[#E2E8F0]"
+          className="size-9 rounded-md border-[#E2E8F0]"
           disabled={!canGoPrevious}
           onClick={() => goToPage(safeCurrentPage - 1)}
           size="icon"
@@ -142,7 +142,7 @@ export function PaginationControl({
                 aria-current={item === safeCurrentPage ? "page" : undefined}
                 aria-label={`Page ${item}`}
                 className={cn(
-                  "size-10 rounded-xl border-[#E2E8F0]",
+                  "size-9 rounded-md border-[#E2E8F0] text-sm",
                   item === safeCurrentPage &&
                     "border-[#605DEC] bg-[#605DEC] text-white hover:bg-[#605DEC]/90"
                 )}
@@ -161,7 +161,7 @@ export function PaginationControl({
 
         <Button
           aria-label="Next page"
-          className="size-10 rounded-xl border-[#E2E8F0]"
+          className="size-9 rounded-md border-[#E2E8F0]"
           disabled={!canGoNext}
           onClick={() => goToPage(safeCurrentPage + 1)}
           size="icon"
@@ -178,7 +178,7 @@ export function PaginationControl({
           Page
         </label>
         <Input
-          className="h-10 w-18 rounded-xl border-[#E2E8F0] text-center"
+          className="h-9 w-16 rounded-md border-[#E2E8F0] text-center text-sm"
           defaultValue={safeCurrentPage}
           disabled={disabled}
           id={pageJumpId}
