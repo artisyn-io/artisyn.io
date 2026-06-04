@@ -1,5 +1,6 @@
 "use client";
 import { useState, Suspense } from "react";
+import Link from "next/link";
 import { useWallet } from "@/context/WalletProvider";
 import type { Job } from "../dummyjobs";
 import { jobs } from "../dummyjobs";
@@ -96,34 +97,26 @@ const JobCard = () => {
             </div>
 
             <div className="lg:w-[70%] md:w-[70%] w-full flex flex-col lg:my-0 md:my-0 my-3">
-             <div className="flex lg:justify-between lg:items-center md:justify-between md:items-center  lg:flex-row md:flex-row flex-col gap-3">
+             <div className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:items-center md:flex-row md:justify-between md:items-center">
                 <div>
-                <div className="mb-1 flex flex-wrap items-center gap-2">
                   <p className="text-[12px] text-[#212121]">Posted 2 mins ago</p>
-                  <JobStatusBadge status="available" size="sm" />
+                  <h2 className="lg:text-[20px] md:text-[18px] text-[16px] font-semibold">
+                    {info.shortDescription}
+                  </h2>
                 </div>
-                <h2 className="lg:text-[20px] md:text-[18px] text-[16px] font-semibold">
-                  {info.shortDescription}
-                </h2>
-                </div>
-                <div>
-                  <button
-                    onClick={() => applyToJob(info, index)}
-                    disabled={statusMap[index]?.state === "loading" || statusMap[index]?.state === "success"}
-                    className="border rounded-md py-2 hover:bg-black hover:text-white text-[14px] px-6 g:my-0 md:my-0 my-3 disabled:opacity-50"
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link
+                    href={`/artisan/jobs/${info.id}`}
+                    className="text-sm font-medium text-[#605DEC] hover:underline"
                   >
-                    {statusMap[index]?.state === "loading"
-                      ? "Applying..."
-                      : statusMap[index]?.state === "success"
-                      ? "Applied"
-                      : "Apply"}
+                    View details
+                  </Link>
+                  <button
+                    onClick={() => alert("Application sent!")}
+                    className="border rounded-md py-2 hover:bg-black hover:text-white text-[14px] px-6"
+                  >
+                    Apply
                   </button>
-
-                  {statusMap[index] && (
-                    <p className="text-sm mt-2 text-gray-600">
-                      {statusMap[index]?.message}
-                    </p>
-                  )}
                 </div>
               </div>
 
