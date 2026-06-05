@@ -23,16 +23,17 @@ const JobFilter = ({ onFilterChange, roles }: Props) => {
   const searchParams = useSearchParams();
   const [openDropdown, setOpenDropdown] = useState(false);
 
-  // 1. Read filter state FROM the URL
-  const filters: Filters = {
-    search: searchParams.get("search") ?? "",
-    role: searchParams.get("role") ?? null,
-    urgency: searchParams.get("urgency") ?? null,
-  };
-   // 2. On mount
-   useEffect(() => {
-    onFilterChange(filters);
-  }, [searchParams]);
+  // 1. Extract raw primitives for the dependency array
+  const search = searchParams.get("search") ?? "";
+  const role = searchParams.get("role") ?? null;
+  const urgency = searchParams.get("urgency") ?? null;
+
+  const filters: Filters = { search, role, urgency };
+
+  // 2. On mount / URL change
+  useEffect(() => {
+    onFilterChange({ search, role, urgency });
+  }, [search, role, urgency, onFilterChange]);
 
 const uniqueRoles = Array.from(new Set(roles));
 
@@ -101,7 +102,7 @@ const updateFilters = (newFilters: Partial<Filters>) => {
         </button>
 
         {openDropdown && (
-          <div className="absolute right-4 top-17.5 w-56 bg-white border rounded-lg shadow-lg p-4 z-50">
+          <div className="absolute right-4 top-[70px] w-56 bg-white border rounded-lg shadow-lg p-4 z-50">
             <p className="text-sm font-semibold mb-3">More Filters</p>
             {["high", "medium", "low"].map((level) => (
               <button

@@ -1,5 +1,5 @@
 "use client";
-import { useState, Suspense, useEffect } from "react";
+import { useState, Suspense, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { Job } from "../dummyjobs";
 import Image from "next/image";
@@ -65,13 +65,13 @@ const JobCard = () => {
     setFilteredJobs(result);
   }, [jobs, activeFilters]);
 
-  const handleFilterChange = (filters: {
+  const handleFilterChange = useCallback((filters: {
     search: string;
     role: string | null;
     urgency: string | null;
   }) => {
     setActiveFilters(filters);
-  };
+  }, []);
 
   return (
     <div>
