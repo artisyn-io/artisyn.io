@@ -1,21 +1,10 @@
 "use client";
-
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
+import type { Job } from "../dummyjobs";
 import Image from "next/image";
 import bgImg from "../(assets)/bg.png";
 import JobFilter from "./JobFilters";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
-
-interface Job {
-  id: string;
-  title: string;
-  category: string;
-  budget: string;
-  location: string;
-  shortDescription: string;
-  urgency: "low" | "medium" | "high";
-  icon: string;
-}
 
 const JobCard = () => {
   const [jobs, setJobs] = useState<Job[]>([]);

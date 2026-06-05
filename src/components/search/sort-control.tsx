@@ -56,7 +56,7 @@ export function SortControl({
       >
         <SelectTrigger
           aria-label={label}
-          className="h-10 min-w-44 rounded-xl border-[#E2E8F0] bg-white text-[#020817]"
+          className="h-9 min-w-40 rounded-md border-[#E2E8F0] bg-white text-sm text-[#020817]"
         >
           <SelectValue />
         </SelectTrigger>

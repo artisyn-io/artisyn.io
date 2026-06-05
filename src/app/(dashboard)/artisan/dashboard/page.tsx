@@ -2,9 +2,90 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Star } from "lucide-react";
+import { Star, TrendingUp, AlertCircle } from "lucide-react";
 import bgImg from "../listings/(assets)/bg.png";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
+
+// ─── Loading skeleton ────────────────────────────────────────────────────────
+
+function MetricsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div
+          key={i}
+          className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm animate-pulse"
+        >
+          <div className="h-4 bg-gray-200 rounded w-1/2 mb-3" />
+          <div className="h-8 bg-gray-200 rounded w-3/4" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ProfilePerformanceSkeleton() {
+  return (
+    <div className="divide-y divide-gray-200 animate-pulse">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="p-4">
+          <div className="h-3 bg-gray-200 rounded w-1/2 mb-2" />
+          <div className="h-5 bg-gray-200 rounded w-1/3" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Error banner ─────────────────────────────────────────────────────────────
+
+function ErrorBanner({ message, onRetry }: { message: string; onRetry: () => void }) {
+  return (
+    <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 mb-6">
+      <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+      <div className="flex-1">
+        <p className="text-sm font-medium text-red-800">
+          Could not load dashboard metrics
+        </p>
+        <p className="text-sm text-red-600 mt-0.5">{message}</p>
+      </div>
+      <button
+        onClick={onRetry}
+        className="text-sm font-medium text-red-700 hover:text-red-900 underline underline-offset-2 flex-shrink-0"
+      >
+        Retry
+      </button>
+    </div>
+  );
+}
+
+// ─── Empty state ──────────────────────────────────────────────────────────────
+
+function EmptyMetrics() {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      <TrendingUp className="w-12 h-12 text-gray-300 mb-3" />
+      <p className="text-gray-500 font-medium">No metrics available yet</p>
+      <p className="text-sm text-gray-400 mt-1">
+        Complete your first job to start seeing performance data here.
+      </p>
+    </div>
+  );
+}
+
+// ─── Main dashboard ───────────────────────────────────────────────────────────
+
+// Define types that match dummyjobs for compatibility
+interface Job {
+  title: string;
+  category: string;
+  budget: string;
+  location: string;
+  shortDescription: string;
+  urgency: "low" | "medium" | "high";
+  icon: string;
+  status: "available" | "active" | "applied" | "completed";
+}
 
 interface AvailableJob {
 	id: string;
@@ -59,8 +140,6 @@ export default function ArtisanDashboard() {
 
 	// Sample active jobs from live available data
 	const activeJobsData = availableJobs.slice(0, 2);
-
-	const availableJobsPreview = availableJobs.slice(0, 4);
 
 	return (
 		<div className="w-full">
@@ -139,50 +218,60 @@ export default function ArtisanDashboard() {
 
 						{/* Jobs List */}
 						<div className="divide-y divide-gray-200">
-							{availableJobsPreview.map((job, index) => (
-								<div key={index} className="p-4 hover:bg-gray-50 transition-colors">
-									<div className="flex gap-3">
-										{/* Job Image */}
-										<div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-											<Image
-												src={bgImg}
-												alt={job.title}
-												width={80}
-												height={80}
-												className="w-full h-full object-cover"
-											/>
-										</div>
+							{loadingJobs ? (
+								<div className="p-8 text-center text-sm text-gray-500">
+									Loading available jobs...
+								</div>
+							) : availableJobs.length === 0 ? (
+								<div className="p-8 text-center text-sm text-gray-500">
+									No available jobs at the moment
+								</div>
+							) : (
+								availableJobs.slice(0, 4).map((job, index) => (
+									<div key={index} className="p-4 hover:bg-gray-50 transition-colors">
+										<div className="flex gap-3">
+											{/* Job Image */}
+											<div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+												<Image
+													src={bgImg}
+													alt={job.title}
+													width={80}
+													height={80}
+													className="w-full h-full object-cover"
+												/>
+											</div>
 
-										{/* Job Details */}
-										<div className="flex-1 min-w-0">
-											<p className="text-xs text-gray-500 mb-1">
-												Posted 1 min ago
-											</p>
-											<JobStatusBadge
-												status="available"
-												size="sm"
-												className="mb-2"
-											/>
-											<h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-												{job.shortDescription}
-											</h3>
-											<div className="text-xs text-gray-600">
-												<div className="flex flex-wrap gap-2">
-													<span>Category: {job.category}</span>
-													<span>•</span>
-													<span>Compensation: {job.budget}</span>
-													<span>•</span>
-													<span>Location: {job.location}</span>
-													<span>•</span>
-													<span className="uppercase font-medium text-red-600">
-														{job.urgency}
-													</span>
+											{/* Job Details */}
+											<div className="flex-1 min-w-0">
+												<p className="text-xs text-gray-500 mb-1">
+													Posted 1 min ago
+												</p>
+												<JobStatusBadge
+													status="available"
+													size="sm"
+													className="mb-2"
+												/>
+												<h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
+													{job.shortDescription}
+												</h3>
+												<div className="text-xs text-gray-600">
+													<div className="flex flex-wrap gap-2">
+														<span>Category: {job.category}</span>
+														<span>•</span>
+														<span>Compensation: {job.budget}</span>
+														<span>•</span>
+														<span>Location: {job.location}</span>
+														<span>•</span>
+														<span className="uppercase font-medium text-red-600">
+															{job.urgency}
+														</span>
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							))}
+								))
+							)}
 						</div>
 					</div>
 				</div>
@@ -250,38 +339,48 @@ export default function ArtisanDashboard() {
 
 						{/* Jobs List */}
 						<div className="divide-y divide-gray-200">
-							{activeJobsData.map((job, index) => (
-								<div key={index} className="p-4 hover:bg-gray-50 transition-colors">
-									<div className="flex gap-3">
-										{/* Job Image */}
-										<div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
-											<Image
-												src={bgImg}
-												alt={job.title}
-												width={60}
-												height={60}
-												className="w-full h-full object-cover"
-											/>
-										</div>
+							{loadingJobs ? (
+								<div className="p-8 text-center text-sm text-gray-500">
+									Loading active jobs...
+								</div>
+							) : activeJobsData.length === 0 ? (
+								<div className="p-8 text-center text-sm text-gray-500">
+									No active jobs at the moment
+								</div>
+							) : (
+								activeJobsData.slice(0, 2).map((job, index) => (
+									<div key={index} className="p-4 hover:bg-gray-50 transition-colors">
+										<div className="flex gap-3">
+											{/* Job Image */}
+											<div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+												<Image
+													src={bgImg}
+													alt={job.title}
+													width={60}
+													height={60}
+													className="w-full h-full object-cover"
+												/>
+											</div>
 
-										{/* Job Info */}
-										<div className="flex-1 min-w-0">
-											<p className="text-xs text-gray-500 mb-1">
-												Started 1 day ago
-											</p>
-											<JobStatusBadge
-												status="active"
-												size="sm"
-												variant="outline"
-												className="mb-2"
-											/>
-											<h3 className="font-semibold text-gray-900 text-sm line-clamp-2">
-												{job.shortDescription}
-											</h3>
+											{/* Job Info */}
+											<div className="flex-1 min-w-0">
+												<p className="text-xs text-gray-500 mb-1">
+													Started 1 day ago
+												</p>
+												<JobStatusBadge
+													status="active"
+													size="sm"
+													variant="outline"
+													className="mb-2"
+												/>
+												<h3 className="font-semibold text-gray-900 text-sm line-clamp-2">
+													{job.shortDescription}
+												</h3>
+											</div>
 										</div>
 									</div>
-								</div>
-							))}
+								))
+							)}
 						</div>
 					</div>
 				</div>

@@ -1,4 +1,5 @@
 export interface Job {
+  id: string;
   title: string;
   category: string;
   budget: string;
@@ -6,10 +7,12 @@ export interface Job {
   shortDescription: string;
   urgency: "low" | "medium" | "high";
   icon: string;
+  status: "available" | "active" | "applied" | "completed";
 }
 
 export const jobs: Job[] = [
   {
+    id: "plumber",
     title: "Plumber",
     category: "Home Services",
     budget: "₦15,000 - ₦30,000",
@@ -18,8 +21,10 @@ export const jobs: Job[] = [
       "Fix leaking pipes and replace damaged bathroom fittings in a residential apartment.",
     urgency: "high",
     icon: "FiTool",
+    status: "available",
   },
   {
+    id: "tailor",
     title: "Tailor",
     category: "Fashion & Tailoring",
     budget: "₦10,000 - ₦25,000",
@@ -28,8 +33,10 @@ export const jobs: Job[] = [
       "Sew a complete set of custom native attire for an upcoming family event.",
     urgency: "medium",
     icon: "FiScissors",
+    status: "active",
   },
   {
+    id: "mechanic",
     title: "Mechanic",
     category: "Auto Repair",
     budget: "₦20,000 - ₦50,000",
@@ -38,8 +45,10 @@ export const jobs: Job[] = [
       "Diagnose engine knocking sound and service a Toyota Corolla.",
     urgency: "high",
     icon: "FiTruck",
+    status: "active",
   },
   {
+    id: "electrician",
     title: "Electrician",
     category: "Home Services",
     budget: "₦12,000 - ₦35,000",
@@ -48,8 +57,10 @@ export const jobs: Job[] = [
       "Fix faulty wiring and install new power sockets in a two-bedroom flat.",
     urgency: "low",
     icon: "FiZap",
+    status: "available",
   },
   {
+    id: "barber",
     title: "Barber",
     category: "Personal Care",
     budget: "₦12,000 - ₦35,000",
@@ -58,8 +69,10 @@ export const jobs: Job[] = [
       "Provide haircuts, beard trims, and grooming services for clients in a professional setting.",
     urgency: "medium",
     icon: "FiScissors",
+    status: "applied",
   },
   {
+    id: "teacher",
     title: "Teacher",
     category: "Education",
     budget: "₦12,000 - ₦35,000",
@@ -68,5 +81,6 @@ export const jobs: Job[] = [
       "Teach students literacy, numeracy, and other subjects at a local school.",
     urgency: "low",
     icon: "FiBriefcase",
+    status: "completed",
   },
 ];

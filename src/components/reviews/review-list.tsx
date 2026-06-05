@@ -5,6 +5,7 @@ import { Star, Flag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ReviewReportModal } from "./review-report-modal";
+import { ReviewResponseComposer } from "./review-response-composer";
 
 export type ReviewRating = 1 | 2 | 3 | 4 | 5;
 
@@ -22,6 +23,7 @@ export interface ReviewListProps {
 	pageSize?: number;
 	className?: string;
 	emptyMessage?: string;
+	isCurator?: boolean;
 }
 
 function clampNumber(value: number, min: number, max: number) {
@@ -66,7 +68,7 @@ function Stars({ rating }: { rating: ReviewRating }) {
 	);
 }
 
-function ReviewCard({ review }: { review: Review }) {
+function ReviewCard({ review, isCurator }: { review: Review; isCurator?: boolean }) {
 	const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
 	return (
@@ -92,6 +94,8 @@ function ReviewCard({ review }: { review: Review }) {
 			<p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-slate-700">
 				{review.comment}
 			</p>
+
+			<ReviewResponseComposer reviewId={review.id} isCurator={isCurator ?? false} />
 
 			<div className="mt-4 flex justify-end">
 				<button
@@ -141,6 +145,7 @@ export function ReviewList({
 	pageSize = 5,
 	className,
 	emptyMessage = "No reviews yet.",
+	isCurator = false,
 }: ReviewListProps) {
 	const safePageSize = clampNumber(pageSize, 1, 50);
 	const items = useMemo(() => reviews ?? [], [reviews]);
@@ -181,7 +186,7 @@ export function ReviewList({
 	return (
 		<section className={cn("space-y-4", className)}>
 			{paged.map((review) => (
-				<ReviewCard key={review.id} review={review} />
+				<ReviewCard key={review.id} review={review} isCurator={isCurator} />
 			))}
 
 			{totalPages > 1 && (
