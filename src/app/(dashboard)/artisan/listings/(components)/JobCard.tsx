@@ -98,24 +98,29 @@ const JobCard = () => {
                 />
               </div>
 
-              <div className="lg:w-[70%] md:w-[70%] w-full flex flex-col lg:my-0 md:my-0 my-3">
-                <div className="flex lg:justify-between lg:items-center md:justify-between md:items-center lg:flex-row md:flex-row flex-col gap-3">
-                  <div>
-                    <div className="mb-1 flex flex-wrap items-center gap-2">
-                      <p className="text-[12px] text-[#212121]">Posted 2 mins ago</p>
-                      <JobStatusBadge status="available" size="sm" />
-                    </div>
-                    <h2 className="lg:text-[20px] md:text-[18px] text-[16px] font-semibold">
-                      {info.shortDescription}
-                    </h2>
-                  </div>
+            <div className="lg:w-[70%] md:w-[70%] w-full flex flex-col lg:my-0 md:my-0 my-3">
+             <div className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:items-center md:flex-row md:justify-between md:items-center">
+                <div>
+                  <p className="text-[12px] text-[#212121]">Posted 2 mins ago</p>
+                  <h2 className="lg:text-[20px] md:text-[18px] text-[16px] font-semibold">
+                    {info.shortDescription}
+                  </h2>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <link
+                    href={`/artisan/jobs/${info.id}`}
+                    className="text-sm font-medium text-[#605DEC] hover:underline"
+                  >
+                    View details
+                  </link>
                   <button
                     onClick={() => alert("Application sent!")}
-                    className="border rounded-md py-2 hover:bg-black hover:text-white text-[14px] px-6 g:my-0 md:my-0 my-3"
+                    className="border rounded-md py-2 hover:bg-black hover:text-white text-[14px] px-6"
                   >
                     Apply
                   </button>
                 </div>
+              </div>
 
                 <div className="text-[14px] flex justify-between lg:items-center md:items-center mt-auto text-[#777679] flex-col lg:flex-row md:flex-row">
                   <p>
