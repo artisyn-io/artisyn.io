@@ -1,10 +1,10 @@
 "use client";
 import { useState, Suspense, useEffect } from "react";
+import Link from "next/link";
 import type { Job } from "../dummyjobs";
 import Image from "next/image";
 import bgImg from "../(assets)/bg.png";
 import JobFilter from "./JobFilters";
-import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 
 const JobCard = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -107,12 +107,12 @@ const JobCard = () => {
                   </h2>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <link
+                  <Link
                     href={`/artisan/jobs/${info.id}`}
                     className="text-sm font-medium text-[#605DEC] hover:underline"
                   >
                     View details
-                  </link>
+                  </Link>
                   <button
                     onClick={() => alert("Application sent!")}
                     className="border rounded-md py-2 hover:bg-black hover:text-white text-[14px] px-6"
