@@ -2,25 +2,9 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { jobs } from "../dummyjobs";
-import { JSX } from "react";
 import {
-  FiTool,
-  FiScissors,
-  FiTruck,
-  FiZap,
   FiFilter,
-  FiBriefcase,
 } from "react-icons/fi";
-import { MdUpdateDisabled } from "react-icons/md";
-
-const iconMap: Record<string, JSX.Element> = {
-  FiTool: <FiTool />,
-  FiScissors: <FiScissors />,
-  FiTruck: <FiTruck />,
-  FiZap: <FiZap />,
-  FiBriefcase: <FiBriefcase />,
-};
 
 type Filters = {
   search: string;
@@ -30,34 +14,36 @@ type Filters = {
 
 interface Props {
   onFilterChange: (filters: Filters) => void;
+  roles: string[];
 }
 
-const JobFilter = ({ onFilterChange }: Props) => {
+const JobFilter = ({ onFilterChange, roles }: Props) => {
    const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [openDropdown, setOpenDropdown] = useState(false);
 
-  // 1. Read filter state FROM the URL
-  const filters: Filters = {
-    search: searchParams.get("search") ?? "",
-    role: searchParams.get("role") ?? null,
-    urgency: searchParams.get("urgency") ?? null,
-  };
-   // 2. On mount
-   useEffect(() => {
-    onFilterChange(filters);
-  }, [searchParams]);
+  // 1. Extract raw primitives for the dependency array
+  const search = searchParams.get("search") ?? "";
+  const role = searchParams.get("role") ?? null;
+  const urgency = searchParams.get("urgency") ?? null;
 
-const uniqueRoles = Array.from(new Set(jobs.map((job) => job.title)));
+  const filters: Filters = { search, role, urgency };
 
-// 3. Write filter changes TO the URL
+  // 2. On mount / URL change
+  useEffect(() => {
+    onFilterChange({ search, role, urgency });
+  }, [search, role, urgency, onFilterChange]);
+
+const uniqueRoles = Array.from(new Set(roles));
+
+  // 3. Write filter changes TO the URL
 const updateFilters = (newFilters: Partial<Filters>) => {
     const updated = { ...filters, ...newFilters };
     const params = new URLSearchParams();
 
   if (updated.search) params.set("search", updated.search);
-  if (updated.role) params.set("roles", updated.role);
+  if (updated.role) params.set("role", updated.role);
   if (updated.urgency) params.set("urgency", updated.urgency);
 
      router.push(`${pathname}?${params.toString()}`, { scroll: false });
@@ -91,35 +77,32 @@ const updateFilters = (newFilters: Partial<Filters>) => {
 </button>
           
 
-          {uniqueRoles.slice(0, 6).map((role) => {
-            const job = jobs.find((j) => j.title === role);
-            return (
-              <button
-                key={role}
-                onClick={() =>
-                  updateFilters({ role: filters.role === role ? null : role })
-                }
-                className={`flex items-center gap-2 px-3 py-2 rounded-md border border-[#E2E8F0] text-sm ${
-                  filters.role === role
-                    ? "bg-black text-white"
-                    : "bg-transparent text-gray-700"
-                }`}
-              >
-                {job?.icon && iconMap[job.icon]}
-                <span>{role}</span>
-              </button>
-            );
-          })}
+          {uniqueRoles.slice(0, 6).map((role) => (
+            <button
+              key={role}
+              onClick={() =>
+                updateFilters({ role: filters.role === role ? null : role })
+              }
+              className={`flex items-center gap-2 px-3 py-2 rounded-md border border-[#E2E8F0] text-sm ${
+                filters.role === role
+                  ? "bg-black text-white"
+                  : "bg-transparent text-gray-700"
+              }`}
+            >
+              <span>{role}</span>
+            </button>
+          ))}
         </div>
         <button
           onClick={() => setOpenDropdown(!openDropdown)}
           className="self-end p-2 border rounded-md"
+          aria-label="Toggle filters"
         >
           <FiFilter />
         </button>
 
         {openDropdown && (
-          <div className="absolute right-4 top-17.5 w-56 bg-white border rounded-lg shadow-lg p-4 z-50">
+          <div className="absolute right-4 top-[70px] w-56 bg-white border rounded-lg shadow-lg p-4 z-50">
             <p className="text-sm font-semibold mb-3">More Filters</p>
             {["high", "medium", "low"].map((level) => (
               <button
@@ -140,27 +123,23 @@ const updateFilters = (newFilters: Partial<Filters>) => {
             ))}
 
             {uniqueRoles.length > 4 &&
-              uniqueRoles.slice(6).map((role) => {
-                const job = jobs.find((j) => j.title === role);
-                return (
-                  <button
-                    key={role}
-                    onClick={() =>
-                      updateFilters({
-                        role: filters.role === role ? null : role,
-                      })
-                    }
-                    className={`text-left px-4 py-2 rounded-md text-sm flex items-center mb-2 ${
-                      filters.role === role
-                        ? "bg-black text-white"
-                        : "hover:bg-gray-100"
-                    }`}
-                  >
-                    {job?.icon && iconMap[job.icon]}
-                    <span className="ml-2">{role}</span>
-                  </button>
-                );
-              })}
+              uniqueRoles.slice(6).map((role) => (
+                <button
+                  key={role}
+                  onClick={() =>
+                    updateFilters({
+                      role: filters.role === role ? null : role,
+                    })
+                  }
+                  className={`text-left px-4 py-2 rounded-md text-sm flex items-center mb-2 ${
+                    filters.role === role
+                      ? "bg-black text-white"
+                      : "hover:bg-gray-100"
+                  }`}
+                >
+                  <span className="ml-2">{role}</span>
+                </button>
+              ))}
           </div>
         )}
       </div>
