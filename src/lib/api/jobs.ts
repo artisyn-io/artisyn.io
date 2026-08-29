@@ -6,8 +6,8 @@ export interface Job {
   [key: string]: unknown;
 }
 
-export interface JobsListResponse {
-  jobs: Job[];
+export interface JobsListResponse<T = Job> {
+  jobs: T[];
   total: number;
   page: number;
   totalPages: number;
@@ -19,8 +19,8 @@ export interface ListJobsParams {
   [key: string]: string | number | undefined;
 }
 
-export async function listJobs(
+export async function listJobs<T = Job>(
   params: ListJobsParams = {}
-): Promise<JobsListResponse> {
-  return apiClient.get<JobsListResponse>("/api/jobs", { query: params });
+): Promise<JobsListResponse<T>> {
+  return apiClient.get<JobsListResponse<T>>("/api/jobs", { query: params });
 }

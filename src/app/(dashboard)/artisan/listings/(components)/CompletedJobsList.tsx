@@ -25,8 +25,8 @@ const CompletedJobsList = () => {
     const fetchJobs = async () => {
       setLoading(true);
       try {
-        const data = await listJobs({ page, limit: LIMIT });
-        setJobs(data.jobs as CompletedJob[]);
+        const data = await listJobs<CompletedJob>({ page, limit: LIMIT });
+        setJobs(data.jobs);
         setTotalPages(data.totalPages ?? 1);
       } catch (error) {
         console.error("Failed to fetch completed jobs:", error);
