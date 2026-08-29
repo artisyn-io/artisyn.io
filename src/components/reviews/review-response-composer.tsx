@@ -243,11 +243,13 @@ export function ReviewResponseComposer({
           </p>
           <p className="mt-1 text-xs text-slate-400">
             Updated{" "}
-            {new Intl.DateTimeFormat(undefined, {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            }).format(new Date(response.updatedAt))}
+            {response.updatedAt
+              ? new Intl.DateTimeFormat(undefined, {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                }).format(new Date(response.updatedAt))
+              : ""}
           </p>
         </div>
       </div>
