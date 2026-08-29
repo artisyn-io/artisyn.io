@@ -23,7 +23,17 @@ const AppliedJobsList = () => {
     const fetchApplications = async () => {
       try {
         const data = await getApplications();
-        setApplications(data as Application[]);
+        setApplications(
+          data.map((app) => ({
+            id: app.id,
+            jobId: app.id,
+            jobTitle: app.jobTitle,
+            company: app.applicant,
+            state: "Applied",
+            appliedAt: app.createdAt,
+            updatedAt: app.createdAt,
+          }))
+        );
       } catch (error) {
         console.error("Failed to fetch applications:", error);
       } finally {
