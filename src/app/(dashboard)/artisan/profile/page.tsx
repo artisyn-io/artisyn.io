@@ -10,8 +10,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import { EMPTY_ARTISAN_PROFILE, type ArtisanProfile } from '@/lib/api/profile';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useProfile } from '@/lib/hooks';
 
 const skillCategories = [
   'Carpentry',
@@ -47,34 +49,30 @@ const experienceOptions = [
   '10+ years',
 ];
 
-interface ProfileData {
-  fullName: string;
-  email: string;
-  skillCategory: string;
-  state: string;
-  city: string;
-  yearsOfExperience: string;
-  bio: string;
-  profileImageUrl: string | null;
-}
-
 export default function ArtisanProfilePage() {
+  const {
+    profile,
+    isLoading,
+    error,
+    refetch,
+    updateProfile,
+    isSaving,
+    saveError,
+  } = useProfile();
+
   const [_, setProfileImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [formData, setFormData] = useState<ProfileData>({
-    fullName: 'Samuel Adeyemi',
-    email: 'samuel@example.com',
-    skillCategory: 'Carpentry',
-    state: 'Lagos',
-    city: 'Ikeja',
-    yearsOfExperience: '5-10 years',
-    bio: "I'm a skilled carpenter with over 7 years of experience in custom furniture, cabinetry, and general woodwork. I take pride in delivering quality craftsmanship that meets clients' exact specifications and timelines.",
-    profileImageUrl: null,
-  });
+  // Unsaved edits live in `draft`; until the user types, the form renders the
+  // profile returned by the hook.
+  const [draft, setDraft] = useState<ArtisanProfile | null>(null);
+  const formData = draft ?? profile ?? EMPTY_ARTISAN_PROFILE;
+
+  const updateField = (changes: Partial<ArtisanProfile>) => {
+    setDraft({ ...formData, ...changes });
+  };
 
   const mockStats = {
     profileViews: 124,
@@ -91,16 +89,19 @@ export default function ArtisanProfilePage() {
     }
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSaving(true);
     setSaveSuccess(false);
-    // Simulate API call
-    setTimeout(() => {
-      setIsSaving(false);
+
+    try {
+      await updateProfile(formData);
+      // Fall back to the stored profile now that the draft is persisted.
+      setDraft(null);
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
-    }, 1000);
+    } catch {
+      // The hook exposes the failure through `saveError`.
+    }
   };
 
   const displayImage = previewUrl ?? formData.profileImageUrl;
@@ -117,6 +118,29 @@ export default function ArtisanProfilePage() {
     (completionItems.filter((i) => i.done).length / completionItems.length) *
       100,
   );
+
+  if (isLoading && !profile) {
+    return (
+      <div className="w-full py-20 text-center text-sm text-gray-500">
+        Loading your profile...
+      </div>
+    );
+  }
+
+  if (error && !profile) {
+    return (
+      <div className="w-full py-20 text-center">
+        <p className="text-sm text-red-600">{error}</p>
+        <button
+          type="button"
+          onClick={() => refetch()}
+          className="mt-3 px-4 py-2 text-sm border rounded-md hover:bg-gray-50"
+        >
+          Try again
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -227,7 +251,7 @@ export default function ArtisanProfilePage() {
                     id="fullName"
                     value={formData.fullName}
                     onChange={(e) =>
-                      setFormData({ ...formData, fullName: e.target.value })
+                      updateField({ fullName: e.target.value })
                     }
                     placeholder="Your full name"
                     className="h-10 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
@@ -242,7 +266,7 @@ export default function ArtisanProfilePage() {
                     type="email"
                     value={formData.email}
                     onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
+                      updateField({ email: e.target.value })
                     }
                     placeholder="you@example.com"
                     className="h-10 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
@@ -257,7 +281,7 @@ export default function ArtisanProfilePage() {
                 <Select
                   value={formData.skillCategory}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, skillCategory: value })
+                    updateField({ skillCategory: value })
                   }
                 >
                   <SelectTrigger className="h-10 focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
@@ -284,7 +308,7 @@ export default function ArtisanProfilePage() {
                 <Select
                   value={formData.yearsOfExperience}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, yearsOfExperience: value })
+                    updateField({ yearsOfExperience: value })
                   }
                 >
                   <SelectTrigger className="h-10 focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
@@ -318,7 +342,7 @@ export default function ArtisanProfilePage() {
                   <Select
                     value={formData.state}
                     onValueChange={(value) =>
-                      setFormData({ ...formData, state: value })
+                      updateField({ state: value })
                     }
                   >
                     <SelectTrigger className="h-10 focus:ring-0 focus:ring-offset-0 focus:border-[#605DEC]">
@@ -345,7 +369,7 @@ export default function ArtisanProfilePage() {
                     id="city"
                     value={formData.city}
                     onChange={(e) =>
-                      setFormData({ ...formData, city: e.target.value })
+                      updateField({ city: e.target.value })
                     }
                     placeholder="Enter your city"
                     className="h-10 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#605DEC]"
@@ -370,7 +394,7 @@ export default function ArtisanProfilePage() {
                 id="bio"
                 value={formData.bio}
                 onChange={(e) =>
-                  setFormData({ ...formData, bio: e.target.value })
+                  updateField({ bio: e.target.value })
                 }
                 placeholder="Describe your skills, experience, and the type of work you do."
                 rows={5}
@@ -428,6 +452,9 @@ export default function ArtisanProfilePage() {
               <p className="text-sm text-green-600 font-medium">
                 Profile updated successfully.
               </p>
+            )}
+            {saveError && (
+              <p className="text-sm text-red-600 font-medium">{saveError}</p>
             )}
           </div>
         </form>

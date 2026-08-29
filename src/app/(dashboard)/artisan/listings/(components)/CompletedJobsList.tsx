@@ -1,46 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-interface CompletedJob {
-  id: string;
-  title: string;
-  category: string;
-  compensation: string;
-  location: string;
-  completedAt: string;
-  clientName: string;
-}
+import type { CompletedJob } from "@/lib/api/jobs";
+import { useJobs } from "@/lib/hooks";
 
 const LIMIT = 5;
 
 const CompletedJobsList = () => {
-  const [jobs, setJobs] = useState<CompletedJob[]>([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const { jobs, isLoading, error, page, totalPages, setPage, refetch } =
+    useJobs<CompletedJob>({ status: "completed", limit: LIMIT });
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`/api/jobs?page=${page}&limit=${LIMIT}`);
-        if (res.ok) {
-          const data = await res.json();
-          setJobs(data.jobs ?? []);
-          setTotalPages(data.totalPages ?? 1);
-        }
-      } catch (error) {
-        console.error("Failed to fetch completed jobs:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchJobs();
-  }, [page]);
-
-  if (loading) {
+  if (isLoading) {
     return <div className="py-10 text-center text-sm text-gray-500">Loading completed jobs...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="py-10 text-center">
+        <p className="text-sm text-red-600">{error}</p>
+        <button
+          onClick={() => refetch()}
+          className="mt-3 px-4 py-2 text-sm border rounded-md hover:bg-gray-50"
+        >
+          Try again
+        </button>
+      </div>
+    );
   }
 
   if (jobs.length === 0) {
@@ -76,7 +60,7 @@ const CompletedJobsList = () => {
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-4 mt-6">
           <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            onClick={() => setPage(page - 1)}
             disabled={page === 1}
             className="px-4 py-2 text-sm border rounded-md disabled:opacity-40 hover:bg-gray-50"
           >
@@ -86,7 +70,7 @@ const CompletedJobsList = () => {
             Page {page} of {totalPages}
           </span>
           <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            onClick={() => setPage(Math.min(totalPages, page + 1))}
             disabled={page === totalPages}
             className="px-4 py-2 text-sm border rounded-md disabled:opacity-40 hover:bg-gray-50"
           >
