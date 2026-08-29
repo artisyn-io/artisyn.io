@@ -2,7 +2,7 @@
 
 import { CircleUserRound, BriefcaseBusiness } from "lucide-react"
 import { cn } from "@/lib/utils"
-import type { AccountType } from "@/app/(auth)/profile-setup/page"
+import type { AccountType } from "@/components/artisan/onboarding-types"
 import { SlideInFromBottom } from "@/components/SlideInFromBottom"
 
 interface AccountTypeSelectionProps {

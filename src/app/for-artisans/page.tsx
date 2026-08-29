@@ -58,7 +58,7 @@ export default function ForArtisansPage() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#605DEC] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[#4F46E5]"
-              href="/profile-setup"
+              href="/profile-setup/account-type"
             >
               Apply as an Artisan
               <ArrowRight className="size-4" />
