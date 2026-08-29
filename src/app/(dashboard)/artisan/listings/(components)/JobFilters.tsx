@@ -1,26 +1,8 @@
 'use client';
 
-import {
-  FiBriefcase,
-  FiFilter,
-  FiScissors,
-  FiTool,
-  FiTruck,
-  FiZap,
-} from 'react-icons/fi';
+import { FiFilter } from 'react-icons/fi';
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
-import { JSX } from 'react';
-import { jobs } from '../dummyjobs';
-
-const iconMap: Record<string, JSX.Element> = {
-  FiTool: <FiTool />,
-  FiScissors: <FiScissors />,
-  FiTruck: <FiTruck />,
-  FiZap: <FiZap />,
-  FiBriefcase: <FiBriefcase />,
-};
 
 type Filters = {
   search: string;
@@ -30,9 +12,10 @@ type Filters = {
 
 interface Props {
   onFilterChange: (filters: Filters) => void;
+  roles: string[];
 }
 
-const JobFilter = ({ onFilterChange }: Props) => {
+const JobFilter = ({ onFilterChange, roles }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -52,7 +35,7 @@ const JobFilter = ({ onFilterChange }: Props) => {
     onFilterChange(filters);
   }, [filters, onFilterChange]);
 
-  const uniqueRoles = Array.from(new Set(jobs.map((job) => job.title)));
+  const uniqueRoles = roles;
 
   // 3. Write filter changes TO the URL
   const updateFilters = (newFilters: Partial<Filters>) => {
@@ -92,9 +75,7 @@ const JobFilter = ({ onFilterChange }: Props) => {
             All
           </button>
 
-          {uniqueRoles.slice(0, 6).map((role) => {
-            const job = jobs.find((j) => j.title === role);
-            return (
+          {uniqueRoles.slice(0, 6).map((role) => (
               <button
                 key={role}
                 onClick={() =>
@@ -106,11 +87,9 @@ const JobFilter = ({ onFilterChange }: Props) => {
                     : 'bg-transparent text-gray-700'
                 }`}
               >
-                {job?.icon && iconMap[job.icon]}
                 <span>{role}</span>
               </button>
-            );
-          })}
+          ))}
         </div>
         <button
           onClick={() => setOpenDropdown(!openDropdown)}
@@ -141,9 +120,7 @@ const JobFilter = ({ onFilterChange }: Props) => {
             ))}
 
             {uniqueRoles.length > 4 &&
-              uniqueRoles.slice(6).map((role) => {
-                const job = jobs.find((j) => j.title === role);
-                return (
+              uniqueRoles.slice(6).map((role) => (
                   <button
                     key={role}
                     onClick={() =>
@@ -157,11 +134,9 @@ const JobFilter = ({ onFilterChange }: Props) => {
                         : 'hover:bg-gray-100'
                     }`}
                   >
-                    {job?.icon && iconMap[job.icon]}
                     <span className="ml-2">{role}</span>
                   </button>
-                );
-              })}
+              ))}
           </div>
         )}
       </div>

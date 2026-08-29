@@ -1,21 +1,45 @@
 'use client';
 
-import { Suspense, useCallback, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 
 import Image from 'next/image';
 import type { Job } from '../dummyjobs';
 import JobFilter from './JobFilters';
 import Link from 'next/link';
 import bgImg from '../(assets)/bg.png';
-import { jobs } from '../dummyjobs';
 import { useWallet } from '@/context/WalletProvider';
 
 const JobCard = () => {
-  const [filteredJobs, setFilteredJobs] = useState(jobs);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { publicKey, connected } = useWallet();
   const [_, setStatusMap] = useState<
     Record<number, { state: string; message?: string }>
   >({});
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch('/api/jobs?status=available', { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error('Unable to load available jobs');
+        return response.json() as Promise<{ jobs: Job[] }>;
+      })
+      .then(({ jobs: availableJobs }) => {
+        setJobs(availableJobs);
+        setFilteredJobs(availableJobs);
+      })
+      .catch((error: unknown) => {
+        if (!(error instanceof Error && error.name === 'AbortError')) {
+          setJobs([]);
+          setFilteredJobs([]);
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setIsLoading(false);
+      });
+    return () => controller.abort();
+  }, []);
 
   const applyToJob = async (job: Job, idx: number) => {
     if (!connected || !publicKey) {
@@ -98,7 +122,7 @@ const JobCard = () => {
 
       setFilteredJobs(result);
     },
-    [],
+    [jobs],
   );
 
   return (
@@ -109,10 +133,10 @@ const JobCard = () => {
           <div className="text-sm text-gray-400">Loading filters...</div>
         }
       >
-        <JobFilter onFilterChange={handleFilterChange} />
+        <JobFilter onFilterChange={handleFilterChange} roles={Array.from(new Set(jobs.map((job) => job.title)))} />
       </Suspense>
 
-      {/* rest of JobCard is unchanged */}
+      {isLoading && <p className="mt-8 text-sm text-gray-400">Loading available jobs...</p>}
       <div className="mt-8">
         {filteredJobs.map((info, index) => (
           <div

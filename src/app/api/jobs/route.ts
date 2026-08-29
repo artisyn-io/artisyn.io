@@ -66,14 +66,32 @@ const completedJobs = [
   },
 ];
 
+// The available-jobs response is sourced from the backend route so the
+// available tab never couples its UI to local fixture data.
+const availableJobs = completedJobs.map((job, index) => ({
+  id: job.id,
+  title: job.title,
+  category: job.category,
+  budget: job.compensation,
+  location: job.location,
+  shortDescription: `Complete ${job.title.toLowerCase()} for ${job.clientName}.`,
+  urgency: (index % 3 === 0 ? 'high' : index % 3 === 1 ? 'medium' : 'low') as
+    | 'high'
+    | 'medium'
+    | 'low',
+  icon: 'FiBriefcase',
+  status: 'available' as const,
+}));
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10));
   const limit = Math.max(1, parseInt(searchParams.get('limit') ?? '5', 10));
 
-  const total = completedJobs.length;
+  const source = searchParams.get('status') === 'available' ? availableJobs : completedJobs;
+  const total = source.length;
   const totalPages = Math.ceil(total / limit);
-  const jobs = completedJobs.slice((page - 1) * limit, page * limit);
+  const jobs = source.slice((page - 1) * limit, page * limit);
 
   return NextResponse.json({ jobs, total, page, totalPages });
 }
