@@ -1,20 +1,22 @@
-"use client";
-import { AccountTypeSelection } from "@/components/artisan/account-type-selection";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArtisanProfileStep1 } from "@/components/artisan/artisan-profile-step1";
-import { ArtisanProfileStep2 } from "@/components/artisan/artisan-profile-step2";
-import { OnboardingSuccess } from "@/components/artisan/onboarding-success";
-import { ProgressIndicator } from "@/components/progress-indicator";
+'use client';
 
-export type AccountType = "artisan" | "client" | null;
+import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+
+import { AccountTypeSelection } from '@/components/artisan/account-type-selection';
+import { ArtisanProfileStep1 } from '@/components/artisan/artisan-profile-step1';
+import { ArtisanProfileStep2 } from '@/components/artisan/artisan-profile-step2';
+import Image from 'next/image';
+import { OnboardingSuccess } from '@/components/artisan/onboarding-success';
+import { ProgressIndicator } from '@/components/progress-indicator';
+
+export type AccountType = 'artisan' | 'client' | null;
 export type OnboardingStep =
-  | "account-type"
-  | "artisan-step1"
-  | "artisan-step2"
-  | "client-form"
-  | "success";
+  | 'account-type'
+  | 'artisan-step1'
+  | 'artisan-step2'
+  | 'client-form'
+  | 'success';
 export interface ArtisanFormData {
   fullName: string;
   email: string;
@@ -29,28 +31,28 @@ export interface ArtisanFormData {
 function getInitialState() {
   const defaultState = {
     accountType: null as AccountType,
-    currentStep: "account-type" as OnboardingStep,
+    currentStep: 'account-type' as OnboardingStep,
     artisanData: {
-      fullName: "",
-      email: "",
-      skillCategory: "",
-      state: "",
-      city: "",
-      yearsOfExperience: "",
+      fullName: '',
+      email: '',
+      skillCategory: '',
+      state: '',
+      city: '',
+      yearsOfExperience: '',
       profileImage: null as File | null,
-      bio: "",
+      bio: '',
     },
   };
 
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     try {
-      const savedState = localStorage.getItem("artisan-onboarding-state");
+      const savedState = localStorage.getItem('artisan-onboarding-state');
       if (savedState) {
         const parsed = JSON.parse(savedState);
-        if (parsed.currentStep !== "success") {
+        if (parsed.currentStep !== 'success') {
           return {
             accountType: parsed.accountType || null,
-            currentStep: parsed.currentStep || "account-type",
+            currentStep: parsed.currentStep || 'account-type',
             artisanData: {
               ...defaultState.artisanData,
               ...parsed.artisanData,
@@ -60,8 +62,8 @@ function getInitialState() {
         }
       }
     } catch (error) {
-      console.error("Failed to parse saved state:", error);
-      localStorage.removeItem("artisan-onboarding-state");
+      console.error('Failed to parse saved state:', error);
+      localStorage.removeItem('artisan-onboarding-state');
     }
   }
 
@@ -84,8 +86,8 @@ export default function Page() {
 
   // Save state whenever it changes
   useEffect(() => {
-    if (isHydrated && typeof window !== "undefined") {
-      if (currentStep !== "account-type" && currentStep !== "success") {
+    if (isHydrated && typeof window !== 'undefined') {
+      if (currentStep !== 'account-type' && currentStep !== 'success') {
         const stateToSave = {
           currentStep,
           accountType,
@@ -95,7 +97,7 @@ export default function Page() {
           },
         };
         localStorage.setItem(
-          "artisan-onboarding-state",
+          'artisan-onboarding-state',
           JSON.stringify(stateToSave),
         );
       }
@@ -107,24 +109,24 @@ export default function Page() {
   };
 
   const handleAccountTypeContinue = () => {
-    if (accountType === "artisan") {
-      setCurrentStep("artisan-step1");
-    } else if (accountType === "client") {
-      setCurrentStep("client-form");
+    if (accountType === 'artisan') {
+      setCurrentStep('artisan-step1');
+    } else if (accountType === 'client') {
+      setCurrentStep('client-form');
     }
   };
 
   // Handle back navigation
   const handleBack = () => {
     switch (currentStep) {
-      case "artisan-step1":
-        setCurrentStep("account-type");
+      case 'artisan-step1':
+        setCurrentStep('account-type');
         break;
-      case "artisan-step2":
-        setCurrentStep("artisan-step1");
+      case 'artisan-step2':
+        setCurrentStep('artisan-step1');
         break;
-      case "client-form":
-        setCurrentStep("account-type");
+      case 'client-form':
+        setCurrentStep('account-type');
         break;
       default:
         break;
@@ -133,23 +135,23 @@ export default function Page() {
 
   // Check if back button should be shown
   const showBackButton = () => {
-    return currentStep !== "account-type" && currentStep !== "success";
+    return currentStep !== 'account-type' && currentStep !== 'success';
   };
 
   const getBackgroundImage = () => {
-    if (currentStep === "artisan-step2" || currentStep === "success") {
-      return "/images/artisan_woman.png";
+    if (currentStep === 'artisan-step2' || currentStep === 'success') {
+      return '/images/artisan_woman.png';
     }
-    return "/images/artisan_woodworker.png";
+    return '/images/artisan_woodworker.png';
   };
 
   // Get current progress for indicator
   const getProgressStep = () => {
-    if (accountType === "artisan") {
+    if (accountType === 'artisan') {
       switch (currentStep) {
-        case "artisan-step1":
+        case 'artisan-step1':
           return 1;
-        case "artisan-step2":
+        case 'artisan-step2':
           return 2;
         default:
           return 0;
@@ -166,16 +168,15 @@ export default function Page() {
 
   const handleArtisanStep1Next = (data: Partial<ArtisanFormData>) => {
     setArtisanData((prev) => ({ ...prev, ...data }));
-    setCurrentStep("artisan-step2");
+    setCurrentStep('artisan-step2');
   };
 
   const handleArtisanStep2Complete = async (data: Partial<ArtisanFormData>) => {
-
     // Return if app is already in loading state.
-    if(isLoading) return;
+    if (isLoading) return;
 
     // Use merged local object to handle async React state updates.
-    const updatedArtisanData = {...artisanData, ...data};
+    const updatedArtisanData = { ...artisanData, ...data };
 
     setArtisanData(updatedArtisanData);
     setIsLoading(true);
@@ -197,24 +198,23 @@ export default function Page() {
       const responseData = await response.json();
       console.log('Profile saved successfully:', responseData);
 
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("artisan-onboarding-state");
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('artisan-onboarding-state');
       }
 
-      setCurrentStep("success");
+      setCurrentStep('success');
 
       setTimeout(() => {
         setArtisanData(initialState.artisanData);
       }, 2000);
-
     } catch (error) {
       console.error('Error saving profile data:', error);
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : 'An error occurred while saving profile data to server. Please try again.';
-      
-        console.error("Error message:", errorMessage);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'An error occurred while saving profile data to server. Please try again.';
 
+      console.error('Error message:', errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -233,14 +233,14 @@ export default function Page() {
       {/* Form container - responsive width */}
       <div className="form_div flex flex-col justify-top items-start w-full md:w-auto mx-auto px-[20px] sm:px-[32px] md:px-[40px] py-[40px] sm:py-[56px] md:py-[7vh] overflow-y-auto h-[100vh] max-h-[100vh]">
         <div className="mb-[32px] sm:mb-[40px] md:mb-[4vh]">
-          <img
+          <Image
             src="/images/artisan_logo.png"
             alt="Artisyn logo"
             width={160}
             className="h-8 sm:h-[40px] w-auto"
           />
           height={40}
-          <img
+          <Image
             src="/images/artisan_logo.png"
             alt="Artisyn logo"
             width={160}
@@ -249,9 +249,9 @@ export default function Page() {
           />
         </div>
 
-        {accountType === "artisan" &&
-          (currentStep === "artisan-step1" ||
-            currentStep === "artisan-step2") && (
+        {accountType === 'artisan' &&
+          (currentStep === 'artisan-step1' ||
+            currentStep === 'artisan-step2') && (
             <div
               className="w-full flex items-center justify-between px-[8px] sm:px-[12px] md:px-[1vw] mb-[24px] sm:mb-[28px]"
               style={{ maxWidth: 520 }}
@@ -298,7 +298,7 @@ export default function Page() {
         {/* Forms container with responsive width */}
         <div className="w-full max-w-[520px]">
           <AnimatePresence mode="wait">
-            {currentStep === "account-type" && (
+            {currentStep === 'account-type' && (
               <motion.div
                 key="account-type"
                 variants={pageVariants}
@@ -316,7 +316,7 @@ export default function Page() {
               </motion.div>
             )}
 
-            {currentStep === "artisan-step1" && (
+            {currentStep === 'artisan-step1' && (
               <motion.div
                 key="artisan-step1"
                 variants={pageVariants}
@@ -333,7 +333,7 @@ export default function Page() {
               </motion.div>
             )}
 
-            {currentStep === "artisan-step2" && (
+            {currentStep === 'artisan-step2' && (
               <motion.div
                 key="artisan-step2"
                 variants={pageVariants}
@@ -350,7 +350,7 @@ export default function Page() {
               </motion.div>
             )}
 
-            {currentStep === "success" && (
+            {currentStep === 'success' && (
               <motion.div
                 key="success"
                 variants={pageVariants}
@@ -371,12 +371,12 @@ export default function Page() {
       <div
         className="img_div shadow-lg hidden md:block"
         style={{
-          width: "42vw",
-          height: "100vh",
-          position: "relative",
-          overflow: "hidden",
+          width: '42vw',
+          height: '100vh',
+          position: 'relative',
+          overflow: 'hidden',
           boxShadow:
-            "0 8px 32px 0 rgba(99,102,241,0.07), 0 2px 8px 0 rgba(99,102,241,0.05)",
+            '0 8px 32px 0 rgba(99,102,241,0.07), 0 2px 8px 0 rgba(99,102,241,0.05)',
         }}
       >
         <motion.div
@@ -391,8 +391,8 @@ export default function Page() {
             alt="Artisan at work"
             fill
             style={{
-              objectFit: "cover",
-              filter: "brightness(0.99) saturate(1.13) contrast(1.02)",
+              objectFit: 'cover',
+              filter: 'brightness(0.99) saturate(1.13) contrast(1.02)',
             }}
             sizes="(min-width: 768px) 42vw, 0vw"
             priority
@@ -400,14 +400,14 @@ export default function Page() {
           {/* Overlay gradient for style */}
           <div
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: 0,
               left: 0,
-              width: "100%",
-              height: "100%",
+              width: '100%',
+              height: '100%',
               background:
-                "linear-gradient(90deg, rgba(99,102,241,0.13) 0%, rgba(255,255,255,0.07) 90%)",
-              pointerEvents: "none",
+                'linear-gradient(90deg, rgba(99,102,241,0.13) 0%, rgba(255,255,255,0.07) 90%)',
+              pointerEvents: 'none',
             }}
           />
         </motion.div>

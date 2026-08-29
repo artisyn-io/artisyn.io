@@ -1,28 +1,28 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  User, 
-  Bell, 
-  Shield, 
-  HelpCircle, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Loader2, 
-  ChevronRight, 
-  Link2, 
-  ExternalLink,
-  Sparkles,
-  RefreshCw,
-  X,
-  Mail,
-  Smartphone,
+import {
+  AlertTriangle,
+  Bell,
   Calendar,
-  Save,
+  CheckCircle2,
+  ChevronRight,
+  ExternalLink,
   Eye,
-  UserX
+  HelpCircle,
+  Link2,
+  Loader2,
+  Mail,
+  RefreshCw,
+  Save,
+  Shield,
+  Smartphone,
+  Sparkles,
+  User,
+  UserX,
+  X
 } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 
 // Inline SVGs for social providers to guarantee error-free rendering and custom coloring
 const GoogleIcon = () => (
@@ -535,7 +535,7 @@ export default function SettingsPage() {
       } else {
         throw new Error("Persistence failed");
       }
-    } catch (error) {
+    } catch {
       showToast("Error saving settings. Please try again.", "error");
     } finally {
       setPrivacySaving(false);

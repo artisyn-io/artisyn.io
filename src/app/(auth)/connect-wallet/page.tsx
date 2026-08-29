@@ -1,10 +1,12 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useWallet } from "../../../context/WalletProvider";
-import { Loader2 } from "lucide-react";
-import Image from "next/image";
+import { useEffect, useState } from 'react';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useWallet } from '../../../context/WalletProvider';
 
 export default function ConnectWalletPage() {
   const router = useRouter();
@@ -14,12 +16,12 @@ export default function ConnectWalletPage() {
 
   useEffect(() => {
     if (connected) {
-      router.push("/account-type");
+      router.push('/account-type');
     }
   }, [connected, router]);
 
   const handleWalletConnect = async (
-    walletId: "freighter" | "albedo" | "lobstr",
+    walletId: 'freighter' | 'albedo' | 'lobstr',
   ) => {
     try {
       setConnectingWallet(walletId);
@@ -32,9 +34,9 @@ export default function ConnectWalletPage() {
   };
 
   const walletOptions = [
-    { id: "freighter", name: "Freighter", logo: "/wallets/freighter-logo.png" },
-    { id: "albedo", name: "Albedo", logo: "/wallets/albedo-logo.png" },
-    { id: "lobstr", name: "Lobstr", logo: "/wallets/lobstr-logo.png" },
+    { id: 'freighter', name: 'Freighter', logo: '/wallets/freighter-logo.png' },
+    { id: 'albedo', name: 'Albedo', logo: '/wallets/albedo-logo.png' },
+    { id: 'lobstr', name: 'Lobstr', logo: '/wallets/lobstr-logo.png' },
   ] as const;
 
   return (
@@ -71,8 +73,8 @@ export default function ConnectWalletPage() {
                   className={`w-full flex items-center gap-3 p-4 rounded-lg transition-all duration-200 relative ${
                     hoveredWallet === wallet.id ||
                     connectingWallet === wallet.id
-                      ? "bg-white"
-                      : "bg-transparent"
+                      ? 'bg-white'
+                      : 'bg-transparent'
                   }`}
                 >
                   {(hoveredWallet === wallet.id ||
@@ -103,14 +105,14 @@ export default function ConnectWalletPage() {
 
             <div className="bg-black p-4 -mx-2 -mb-2 mt-2">
               <p className="text-xs text-center text-white">
-                By connecting your wallet, you agree to our{" "}
-                <a href="/terms" className="text-pink-500 hover:underline">
+                By connecting your wallet, you agree to our{' '}
+                <Link href="/terms" className="text-pink-500 hover:underline">
                   Terms and Conditions
-                </a>{" "}
-                and{" "}
-                <a href="/privacy" className="text-pink-500 hover:underline">
+                </Link>{' '}
+                and{' '}
+                <Link href="/privacy" className="text-pink-500 hover:underline">
                   Privacy Policy
-                </a>
+                </Link>
               </p>
             </div>
           </div>

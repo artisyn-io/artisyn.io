@@ -1,49 +1,50 @@
-"use client";
+'use client';
 
-import React, { useState, useRef } from "react";
-import { Camera, MapPin, Star, Briefcase, Save } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Briefcase, Camera, MapPin, Save, Star } from 'lucide-react';
+import React, { useRef, useState } from 'react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
+
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const skillCategories = [
-  "Carpentry",
-  "Plumbing",
-  "Electrical",
-  "Painting",
-  "Welding",
-  "Masonry",
-  "Tailoring",
-  "Photography",
-  "Graphic Design",
-  "Other",
+  'Carpentry',
+  'Plumbing',
+  'Electrical',
+  'Painting',
+  'Welding',
+  'Masonry',
+  'Tailoring',
+  'Photography',
+  'Graphic Design',
+  'Other',
 ];
 
 const nigerianStates = [
-  "Lagos",
-  "Abuja",
-  "Rivers",
-  "Kano",
-  "Oyo",
-  "Kaduna",
-  "Enugu",
-  "Delta",
-  "Anambra",
-  "Ogun",
+  'Lagos',
+  'Abuja',
+  'Rivers',
+  'Kano',
+  'Oyo',
+  'Kaduna',
+  'Enugu',
+  'Delta',
+  'Anambra',
+  'Ogun',
 ];
 
 const experienceOptions = [
-  "Less than 1 year",
-  "1-2 years",
-  "3-5 years",
-  "5-10 years",
-  "10+ years",
+  'Less than 1 year',
+  '1-2 years',
+  '3-5 years',
+  '5-10 years',
+  '10+ years',
 ];
 
 interface ProfileData {
@@ -58,19 +59,19 @@ interface ProfileData {
 }
 
 export default function ArtisanProfilePage() {
-  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const [_, setProfileImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState<ProfileData>({
-    fullName: "Samuel Adeyemi",
-    email: "samuel@example.com",
-    skillCategory: "Carpentry",
-    state: "Lagos",
-    city: "Ikeja",
-    yearsOfExperience: "5-10 years",
+    fullName: 'Samuel Adeyemi',
+    email: 'samuel@example.com',
+    skillCategory: 'Carpentry',
+    state: 'Lagos',
+    city: 'Ikeja',
+    yearsOfExperience: '5-10 years',
     bio: "I'm a skilled carpenter with over 7 years of experience in custom furniture, cabinetry, and general woodwork. I take pride in delivering quality craftsmanship that meets clients' exact specifications and timelines.",
     profileImageUrl: null,
   });
@@ -105,12 +106,12 @@ export default function ArtisanProfilePage() {
   const displayImage = previewUrl ?? formData.profileImageUrl;
 
   const completionItems = [
-    { label: "Profile photo", done: !!displayImage },
-    { label: "Full name", done: !!formData.fullName },
-    { label: "Bio", done: formData.bio.trim().length > 20 },
-    { label: "Skill category", done: !!formData.skillCategory },
-    { label: "Location", done: !!formData.state && !!formData.city },
-    { label: "Experience", done: !!formData.yearsOfExperience },
+    { label: 'Profile photo', done: !!displayImage },
+    { label: 'Full name', done: !!formData.fullName },
+    { label: 'Bio', done: formData.bio.trim().length > 20 },
+    { label: 'Skill category', done: !!formData.skillCategory },
+    { label: 'Location', done: !!formData.state && !!formData.city },
+    { label: 'Experience', done: !!formData.yearsOfExperience },
   ];
   const completionScore = Math.round(
     (completionItems.filter((i) => i.done).length / completionItems.length) *
@@ -421,7 +422,7 @@ export default function ArtisanProfilePage() {
               className="flex items-center gap-2 px-6 py-2.5 bg-[#605DEC] text-white text-sm font-medium rounded-lg hover:bg-[#5558e3] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <Save className="w-4 h-4" />
-              {isSaving ? "Saving..." : "Save Changes"}
+              {isSaving ? 'Saving...' : 'Save Changes'}
             </button>
             {saveSuccess && (
               <p className="text-sm text-green-600 font-medium">
@@ -462,14 +463,14 @@ export default function ArtisanProfilePage() {
                     <span
                       className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 ${
                         item.done
-                          ? "bg-green-100 text-green-600"
-                          : "bg-gray-100 text-gray-400"
+                          ? 'bg-green-100 text-green-600'
+                          : 'bg-gray-100 text-gray-400'
                       }`}
                     >
-                      {item.done ? "✓" : "○"}
+                      {item.done ? '✓' : '○'}
                     </span>
                     <span
-                      className={item.done ? "text-gray-700" : "text-gray-400"}
+                      className={item.done ? 'text-gray-700' : 'text-gray-400'}
                     >
                       {item.label}
                     </span>

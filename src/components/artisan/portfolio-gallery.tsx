@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Image from "next/image";
-import { X, ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronLeft, ChevronRight, ImageOff, X } from 'lucide-react';
+import React, { useCallback, useState } from 'react';
+
+import Image from 'next/image';
 
 export interface PortfolioImage {
   id: string;
@@ -21,7 +22,7 @@ interface PortfolioGalleryProps {
 export function PortfolioGallery({
   images = [],
   onImageClick,
-  className = "",
+  className = '',
 }: PortfolioGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
@@ -43,34 +44,37 @@ export function PortfolioGallery({
     setSelectedIndex(null);
   };
 
-  const navigateImage = (direction: "next" | "prev") => {
-    if (selectedIndex === null || images.length === 0) return;
+  const navigateImage = useCallback(
+    (direction: 'next' | 'prev') => {
+      if (selectedIndex === null || images.length === 0) return;
 
-    const newIndex =
-      direction === "next"
-        ? (selectedIndex + 1) % images.length
-        : (selectedIndex - 1 + images.length) % images.length;
+      const newIndex =
+        direction === 'next'
+          ? (selectedIndex + 1) % images.length
+          : (selectedIndex - 1 + images.length) % images.length;
 
-    setSelectedIndex(newIndex);
-  };
+      setSelectedIndex(newIndex);
+    },
+    [selectedIndex, images],
+  );
 
   // Handle keyboard navigation
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedIndex === null) return;
 
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         closeLightbox();
-      } else if (e.key === "ArrowRight") {
-        navigateImage("next");
-      } else if (e.key === "ArrowLeft") {
-        navigateImage("prev");
+      } else if (e.key === 'ArrowRight') {
+        navigateImage('next');
+      } else if (e.key === 'ArrowLeft') {
+        navigateImage('prev');
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedIndex, images.length]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedIndex, images.length, navigateImage]);
 
   // Empty state
   if (!images || images.length === 0) {
@@ -119,7 +123,7 @@ export function PortfolioGallery({
               alt={image.alt}
               fill
               className={`object-cover transition-all duration-300 group-hover:scale-105 ${
-                loadedImages[image.id] === false ? "hidden" : ""
+                loadedImages[image.id] === false ? 'hidden' : ''
               }`}
               sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 25vw"
               onLoad={() => handleImageLoad(image.id)}
@@ -165,7 +169,7 @@ export function PortfolioGallery({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigateImage("prev");
+                  navigateImage('prev');
                 }}
                 className="absolute left-4 sm:left-8 z-50 p-2 sm:p-3 text-white hover:text-gray-300 transition-colors bg-black/20 hover:bg-black/40 rounded-full"
                 aria-label="Previous image"
@@ -179,7 +183,7 @@ export function PortfolioGallery({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigateImage("next");
+                  navigateImage('next');
                 }}
                 className="absolute right-4 sm:right-8 z-50 p-2 sm:p-3 text-white hover:text-gray-300 transition-colors bg-black/20 hover:bg-black/40 rounded-full"
                 aria-label="Next image"

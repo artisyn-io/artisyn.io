@@ -1,26 +1,32 @@
-"use client";
-import { useState, Suspense } from "react";
-import Link from "next/link";
-import { useWallet } from "@/context/WalletProvider";
-import type { Job } from "../dummyjobs";
-import { jobs } from "../dummyjobs";
-import Image from "next/image";
-import bgImg from "../(assets)/bg.png";
-import JobFilter from "./JobFilters";
-import { JobStatusBadge } from "@/components/jobs/job-status-badge";
+'use client';
+
+import { Suspense, useCallback, useState } from 'react';
+
+import Image from 'next/image';
+import type { Job } from '../dummyjobs';
+import JobFilter from './JobFilters';
+import Link from 'next/link';
+import bgImg from '../(assets)/bg.png';
+import { jobs } from '../dummyjobs';
+import { useWallet } from '@/context/WalletProvider';
 
 const JobCard = () => {
   const [filteredJobs, setFilteredJobs] = useState(jobs);
   const { publicKey, connected } = useWallet();
-  const [statusMap, setStatusMap] = useState<Record<number, { state: string; message?: string }>>({});
+  const [_, setStatusMap] = useState<
+    Record<number, { state: string; message?: string }>
+  >({});
 
   const applyToJob = async (job: Job, idx: number) => {
     if (!connected || !publicKey) {
-      setStatusMap((s) => ({ ...s, [idx]: { state: "error", message: "Connect your wallet to apply." } }));
+      setStatusMap((s) => ({
+        ...s,
+        [idx]: { state: 'error', message: 'Connect your wallet to apply.' },
+      }));
       return;
     }
 
-    setStatusMap((s) => ({ ...s, [idx]: { state: "loading" } }));
+    setStatusMap((s) => ({ ...s, [idx]: { state: 'loading' } }));
 
     try {
       const payload = {
@@ -30,62 +36,89 @@ const JobCard = () => {
         applicant: publicKey,
       };
 
-      const res = await fetch("/api/applications", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/applications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
       if (res.status === 201) {
-        setStatusMap((s) => ({ ...s, [idx]: { state: "success", message: "Application submitted." } }));
+        setStatusMap((s) => ({
+          ...s,
+          [idx]: { state: 'success', message: 'Application submitted.' },
+        }));
       } else if (res.status === 409) {
-        setStatusMap((s) => ({ ...s, [idx]: { state: "duplicate", message: "You have already applied." } }));
+        setStatusMap((s) => ({
+          ...s,
+          [idx]: { state: 'duplicate', message: 'You have already applied.' },
+        }));
       } else {
         const data = await res.json().catch(() => ({}));
-        setStatusMap((s) => ({ ...s, [idx]: { state: "error", message: data?.message || "Failed to submit application." } }));
+        setStatusMap((s) => ({
+          ...s,
+          [idx]: {
+            state: 'error',
+            message: data?.message || 'Failed to submit application.',
+          },
+        }));
       }
-    } catch (err) {
-      setStatusMap((s) => ({ ...s, [idx]: { state: "error", message: "Network error." } }));
+    } catch {
+      setStatusMap((s) => ({
+        ...s,
+        [idx]: { state: 'error', message: 'Network error.' },
+      }));
     }
   };
 
-  const handleFilterChange = (filters: {
-    search: string;
-    role: string | null;
-    urgency: string | null;
-  }) => {
-    const result = jobs.filter((job) => {
-      const matchesSearch =
-        job.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-        job.shortDescription
-          .toLowerCase()
-          .includes(filters.search.toLowerCase());
+  void applyToJob;
 
-      const matchesRole = filters.role
-        ? job.title.toLowerCase().includes(filters.role.toLowerCase())
-        : true;
+  const handleFilterChange = useCallback(
+    (filters: {
+      search: string;
+      role: string | null;
+      urgency: string | null;
+    }) => {
+      const result = jobs.filter((job) => {
+        const matchesSearch =
+          job.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+          job.shortDescription
+            .toLowerCase()
+            .includes(filters.search.toLowerCase());
 
-      const matchesUrgency = filters.urgency
-        ? job.urgency === filters.urgency
-        : true;
+        const matchesRole = filters.role
+          ? job.title.toLowerCase().includes(filters.role.toLowerCase())
+          : true;
 
-      return matchesSearch && matchesRole && matchesUrgency;
-    });
+        const matchesUrgency = filters.urgency
+          ? job.urgency === filters.urgency
+          : true;
 
-    setFilteredJobs(result);
-  };
+        return matchesSearch && matchesRole && matchesUrgency;
+      });
+
+      setFilteredJobs(result);
+    },
+    [],
+  );
 
   return (
     <div>
       {/* Suspense is required, useSearchParams needs it */}
-      <Suspense fallback={<div className="text-sm text-gray-400">Loading filters...</div>}>
+      <Suspense
+        fallback={
+          <div className="text-sm text-gray-400">Loading filters...</div>
+        }
+      >
         <JobFilter onFilterChange={handleFilterChange} />
       </Suspense>
-      
-        {/* rest of JobCard is unchanged */}
+
+      {/* rest of JobCard is unchanged */}
       <div className="mt-8">
         {filteredJobs.map((info, index) => (
-          <div key={index} className="flex mb-4 lg:flex-row md:flex-row flex-col">
+          <div
+            key={index}
+            className="flex mb-4 lg:flex-row md:flex-row flex-col"
+          >
             <div className="lg:w-[12%] md:w-[20%] w-full lg:mr-6 md:mr-4 mr-0">
               <Image
                 src={bgImg}
@@ -97,9 +130,11 @@ const JobCard = () => {
             </div>
 
             <div className="lg:w-[70%] md:w-[70%] w-full flex flex-col lg:my-0 md:my-0 my-3">
-             <div className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:items-center md:flex-row md:justify-between md:items-center">
+              <div className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:items-center md:flex-row md:justify-between md:items-center">
                 <div>
-                  <p className="text-[12px] text-[#212121]">Posted 2 mins ago</p>
+                  <p className="text-[12px] text-[#212121]">
+                    Posted 2 mins ago
+                  </p>
                   <h2 className="lg:text-[20px] md:text-[18px] text-[16px] font-semibold">
                     {info.shortDescription}
                   </h2>
@@ -112,7 +147,7 @@ const JobCard = () => {
                     View details
                   </Link>
                   <button
-                    onClick={() => alert("Application sent!")}
+                    onClick={() => alert('Application sent!')}
                     className="border rounded-md py-2 hover:bg-black hover:text-white text-[14px] px-6"
                   >
                     Apply
@@ -131,7 +166,7 @@ const JobCard = () => {
                   Location: {info.location} <span className="mx-4">|</span>
                 </p>
                 <p>
-                  Urgency:{" "}
+                  Urgency:{' '}
                   <span className="uppercase text-red-500">{info.urgency}</span>
                 </p>
               </div>
