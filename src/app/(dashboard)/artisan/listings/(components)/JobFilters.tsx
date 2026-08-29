@@ -92,9 +92,7 @@ const JobFilter = ({ onFilterChange, roles }: Props) => {
             All
           </button>
 
-          {uniqueRoles.slice(0, 6).map((role) => {
-            const job = jobs.find((j) => j.title === role);
-            return (
+          {uniqueRoles.slice(0, 6).map((role) => (
               <button
                 key={role}
                 onClick={() =>
@@ -106,11 +104,9 @@ const JobFilter = ({ onFilterChange, roles }: Props) => {
                     : 'bg-transparent text-gray-700'
                 }`}
               >
-                {job?.icon && iconMap[job.icon]}
                 <span>{role}</span>
               </button>
-            );
-          })}
+          ))}
         </div>
         <button
           onClick={() => setOpenDropdown(!openDropdown)}
@@ -141,9 +137,7 @@ const JobFilter = ({ onFilterChange, roles }: Props) => {
             ))}
 
             {uniqueRoles.length > 4 &&
-              uniqueRoles.slice(6).map((role) => {
-                const job = jobs.find((j) => j.title === role);
-                return (
+              uniqueRoles.slice(6).map((role) => (
                   <button
                     key={role}
                     onClick={() =>
@@ -157,11 +151,9 @@ const JobFilter = ({ onFilterChange, roles }: Props) => {
                         : 'hover:bg-gray-100'
                     }`}
                   >
-                    {job?.icon && iconMap[job.icon]}
                     <span className="ml-2">{role}</span>
                   </button>
-                );
-              })}
+              ))}
           </div>
         )}
       </div>
