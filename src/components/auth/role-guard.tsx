@@ -36,22 +36,21 @@ export function RoleGuard({
   children,
   redirectTo,
 }: RoleGuardProps) {
-  const { role, isLoading } = useAuth();
+  const { role } = useAuth();
   const router = useRouter();
 
   const authorized = role !== null && allowedRoles.includes(role);
 
   useEffect(() => {
-    if (isLoading) return;
     if (!authorized) {
       router.replace(redirectTo ?? roleHome(role));
     }
-  }, [isLoading, authorized, role, redirectTo, router]);
+  }, [authorized, role, redirectTo, router]);
 
-  if (isLoading || !authorized) {
+  if (!authorized) {
     return (
       <div className="flex min-h-screen items-center justify-center text-sm text-gray-500">
-        {isLoading ? "Loading…" : "Redirecting…"}
+        {role === null ? "Loading…" : "Redirecting…"}
       </div>
     );
   }

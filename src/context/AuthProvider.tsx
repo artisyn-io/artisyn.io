@@ -3,8 +3,7 @@
 import {
   createContext,
   useContext,
-  useEffect,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
@@ -13,8 +12,6 @@ export type Role = "artisan" | "client";
 interface AuthState {
   /** The current user's role, or null when unknown / not yet determined. */
   role: Role | null;
-  /** True once the role has been read from the persistence layer. */
-  isLoading: boolean;
   /** Convenience flag derived from `role`. */
   isAuthenticated: boolean;
 }
@@ -38,23 +35,28 @@ function readRole(): Role | null {
   }
 }
 
+function subscribe(callback: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+const getServerSnapshot = (): Role | null => null;
+
 /**
  * Provides the current user's role to the tree. This is the foundation the
  * route-level guards depend on. The role is persisted in localStorage during
  * onboarding (see `accountType` in `artisan-onboarding-state`).
+ *
+ * `useSyncExternalStore` is used so the value is read from the external store
+ * (localStorage) without calling `setState` inside an effect, and the server
+ * snapshot is `null` so SSR/hydration stay consistent.
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [role, setRole] = useState<Role | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setRole(readRole());
-    setIsLoading(false);
-  }, []);
+  const role = useSyncExternalStore(subscribe, readRole, getServerSnapshot);
 
   const value: AuthState = {
     role,
-    isLoading,
     isAuthenticated: role !== null,
   };
 
