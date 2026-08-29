@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { listJobs } from "@/lib/api/jobs";
 
 interface CompletedJob {
   id: string;
@@ -24,12 +25,9 @@ const CompletedJobsList = () => {
     const fetchJobs = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/jobs?page=${page}&limit=${LIMIT}`);
-        if (res.ok) {
-          const data = await res.json();
-          setJobs(data.jobs ?? []);
-          setTotalPages(data.totalPages ?? 1);
-        }
+        const data = await listJobs({ page, limit: LIMIT });
+        setJobs(data.jobs as CompletedJob[]);
+        setTotalPages(data.totalPages ?? 1);
       } catch (error) {
         console.error("Failed to fetch completed jobs:", error);
       } finally {

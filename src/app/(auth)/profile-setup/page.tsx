@@ -9,6 +9,7 @@ import { ArtisanProfileStep2 } from '@/components/artisan/artisan-profile-step2'
 import Image from 'next/image';
 import { OnboardingSuccess } from '@/components/artisan/onboarding-success';
 import { ProgressIndicator } from '@/components/progress-indicator';
+import { saveProfile } from '@/lib/api/profile';
 
 export type AccountType = 'artisan' | 'client' | null;
 export type OnboardingStep =
@@ -182,20 +183,7 @@ export default function Page() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/profile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedArtisanData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to save profile data.');
-      }
-
-      const responseData = await response.json();
+      const responseData = await saveProfile(updatedArtisanData);
       console.log('Profile saved successfully:', responseData);
 
       if (typeof window !== 'undefined') {

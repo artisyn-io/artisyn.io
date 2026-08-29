@@ -3,16 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import bgImg from "../(assets)/bg.png";
-
-interface Application {
-  id: string;
-  jobId: string;
-  jobTitle: string;
-  company: string;
-  state: string;
-  appliedAt: string;
-  updatedAt: string;
-}
+import { getApplications, type Application } from "@/lib/api/applications";
 
 const AppliedJobsList = () => {
   const [applications, setApplications] = useState<Application[]>([]);
@@ -21,11 +12,8 @@ const AppliedJobsList = () => {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const response = await fetch("/api/applications");
-        if (response.ok) {
-          const data = await response.json();
-          setApplications(data.applications || []);
-        }
+        const data = await getApplications();
+        setApplications(data);
       } catch (error) {
         console.error("Failed to fetch applications:", error);
       } finally {
