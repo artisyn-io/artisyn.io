@@ -12,7 +12,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { JSX } from 'react';
-import { jobs } from '../dummyjobs';
 
 const iconMap: Record<string, JSX.Element> = {
   FiTool: <FiTool />,
@@ -30,9 +29,10 @@ type Filters = {
 
 interface Props {
   onFilterChange: (filters: Filters) => void;
+  roles: string[];
 }
 
-const JobFilter = ({ onFilterChange }: Props) => {
+const JobFilter = ({ onFilterChange, roles }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -52,7 +52,7 @@ const JobFilter = ({ onFilterChange }: Props) => {
     onFilterChange(filters);
   }, [filters, onFilterChange]);
 
-  const uniqueRoles = Array.from(new Set(jobs.map((job) => job.title)));
+  const uniqueRoles = roles;
 
   // 3. Write filter changes TO the URL
   const updateFilters = (newFilters: Partial<Filters>) => {
