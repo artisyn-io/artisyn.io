@@ -1,25 +1,8 @@
 'use client';
 
-import {
-  FiBriefcase,
-  FiFilter,
-  FiScissors,
-  FiTool,
-  FiTruck,
-  FiZap,
-} from 'react-icons/fi';
+import { FiFilter } from 'react-icons/fi';
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
-import { JSX } from 'react';
-
-const iconMap: Record<string, JSX.Element> = {
-  FiTool: <FiTool />,
-  FiScissors: <FiScissors />,
-  FiTruck: <FiTruck />,
-  FiZap: <FiZap />,
-  FiBriefcase: <FiBriefcase />,
-};
 
 type Filters = {
   search: string;
