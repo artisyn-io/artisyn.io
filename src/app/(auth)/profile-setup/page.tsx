@@ -26,8 +26,7 @@ export default function ProfileSetupIndex() {
     } else {
       router.replace('/profile-setup/account-type');
     }
-    return 0;
-  };
+  });
 
   const pageVariants = {
     initial: { opacity: 0, x: -20 },
