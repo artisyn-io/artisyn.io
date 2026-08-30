@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { WalletProvider } from "../context/WalletProvider";
 import { AuthProvider } from "../context/AuthProvider";
+import { ToastProvider } from "../context/ToastProvider";
 
 const satoshi = localFont({
   src: [
@@ -43,9 +44,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${satoshi.variable} antialiased`}>
-        <WalletProvider>
-          <AuthProvider>{children}</AuthProvider>
-        </WalletProvider>
+        <ToastProvider>
+          <WalletProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </WalletProvider>
+        </ToastProvider>
       </body>
     </html>
   );

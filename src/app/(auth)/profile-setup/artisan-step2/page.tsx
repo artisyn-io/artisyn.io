@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useOnboarding } from '@/components/artisan/onboarding-context';
 import type { ArtisanFormData } from '@/components/artisan/onboarding-context';
 import { ArtisanProfileStep2 } from '@/components/artisan/artisan-profile-step2';
 import { OnboardingStepHeader } from '@/components/artisan/onboarding-step-header';
+import { useFormSubmission } from '@/hooks/use-form-submission';
 
 export default function ArtisanStep2() {
   const router = useRouter();
@@ -18,7 +19,10 @@ export default function ArtisanStep2() {
     completed,
     isHydrated,
   } = useOnboarding();
-  const [isLoading, setIsLoading] = useState(false);
+  const { isPending: isLoading, submit } = useFormSubmission({
+    errorMessage: (error) =>
+      error instanceof Error ? error.message : 'Failed to save profile data.',
+  });
 
   useEffect(() => {
     if (!isHydrated) return;
@@ -42,9 +46,8 @@ export default function ArtisanStep2() {
 
     const updatedArtisanData = { ...artisanData, ...data };
     setArtisanData(updatedArtisanData);
-    setIsLoading(true);
 
-    try {
+    await submit(async () => {
       const response = await fetch('/api/profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -58,11 +61,7 @@ export default function ArtisanStep2() {
 
       completeOnboarding();
       router.push('/profile-setup/success');
-    } catch (error) {
-      console.error('Error saving profile data:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    });
   };
 
   return (
