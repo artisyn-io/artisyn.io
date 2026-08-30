@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import bgImg from "../(assets)/bg.png";
+import { getApplications } from "@/lib/api/applications";
 
 interface Application {
   id: string;
@@ -21,11 +22,18 @@ const AppliedJobsList = () => {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const response = await fetch("/api/applications");
-        if (response.ok) {
-          const data = await response.json();
-          setApplications(data.applications || []);
-        }
+        const data = await getApplications();
+        setApplications(
+          data.map((app) => ({
+            id: app.id,
+            jobId: app.id,
+            jobTitle: app.jobTitle,
+            company: app.applicant,
+            state: "Applied",
+            appliedAt: app.createdAt,
+            updatedAt: app.createdAt,
+          }))
+        );
       } catch (error) {
         console.error("Failed to fetch applications:", error);
       } finally {

@@ -3,6 +3,8 @@
  * Fetches artisan dashboard metrics from the backend.
  */
 
+import { apiClient } from "./client";
+
 export interface DashboardMetrics {
   totalEarnings: string;
   activeJobs: number;
@@ -21,35 +23,14 @@ export interface DashboardApiResponse {
   message?: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
-
 /**
  * Fetches dashboard metrics for the authenticated artisan.
- * Throws an error if the request fails or the response is not OK.
+ * Throws an {@link ApiClientError} if the request fails.
  */
 export async function fetchDashboardMetrics(): Promise<DashboardMetrics> {
-  const res = await fetch(`${API_BASE_URL}/api/artisan/dashboard/metrics`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    // Include credentials (cookies/session) for authenticated requests
-    credentials: "include",
-    // Opt out of Next.js full-route cache so data is always fresh
+  return apiClient.get<DashboardMetrics>("/api/artisan/dashboard/metrics", {
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "",
     cache: "no-store",
+    envelope: true,
   });
-
-  if (!res.ok) {
-    throw new Error(
-      `Failed to fetch dashboard metrics: ${res.status} ${res.statusText}`
-    );
-  }
-
-  const json: DashboardApiResponse = await res.json();
-
-  if (!json.success) {
-    throw new Error(json.message ?? "Unexpected error fetching dashboard metrics");
-  }
-
-  return json.data;
 }

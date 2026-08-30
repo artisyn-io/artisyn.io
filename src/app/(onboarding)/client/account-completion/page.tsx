@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from "next/image";
+import { saveProfile } from '@/lib/api/profile';
 
 
 
@@ -100,20 +101,7 @@ export default function AccountCompletionPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/profile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to submit form');
-      }
-
-      const data = await response.json();
+      const data = await saveProfile(formData);
       console.log('Form submitted successfully:', data);
       setSubmitSuccess(true);
 
