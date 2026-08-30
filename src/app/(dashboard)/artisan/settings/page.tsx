@@ -23,6 +23,17 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
+import {
+  getAccountLinks,
+  linkAccount,
+  unlinkAccount,
+  getPreferences,
+  updatePreferences,
+  getPrivacySettings,
+  updatePrivacySettings,
+  unblockUser,
+  getBlockedUsers,
+} from "@/lib/api";
 
 // Inline SVGs for social providers to guarantee error-free rendering and custom coloring
 const GoogleIcon = () => (
@@ -198,17 +209,12 @@ export default function SettingsPage() {
     const fetchAccounts = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/account-links", { cache: "no-store" });
-        if (response.ok) {
-          const data = await response.json();
-          const mapped = data.map((p: RawProvider) => ({
-            ...p,
-            icon: getIcon(p.id)
-          }));
-          setProviders(mapped);
-        } else {
-          throw new Error();
-        }
+        const data = await getAccountLinks();
+        const mapped = data.map((p: RawProvider) => ({
+          ...p,
+          icon: getIcon(p.id)
+        }));
+        setProviders(mapped);
       } catch {
         const stored = localStorage.getItem("artisan-linked-providers");
         if (stored) {
@@ -241,13 +247,8 @@ export default function SettingsPage() {
     const fetchPreferences = async () => {
       try {
         setPrefLoading(true);
-        const response = await fetch("/api/preferences", { cache: "no-store" });
-        if (response.ok) {
-          const data = await response.json();
-          setPreferences(data);
-        } else {
-          throw new Error();
-        }
+        const data = await getPreferences();
+        setPreferences(data);
       } catch {
         const stored = localStorage.getItem("artisan-notification-preferences");
         if (stored) {
@@ -268,11 +269,8 @@ export default function SettingsPage() {
     const fetchPrivacySettings = async () => {
       try {
         setPrivacyLoading(true);
-        const response = await fetch("/api/user/privacy");
-        if (response.ok) {
-          const data = await response.json();
-          setPrivacySettings(data);
-        }
+        const data = await getPrivacySettings();
+        setPrivacySettings(data);
       } catch (error) {
         console.error("Failed to fetch privacy settings:", error);
       } finally {
@@ -281,34 +279,11 @@ export default function SettingsPage() {
     };
 
     const fetchBlocklist = async () => {
-      const blocklistEndpoints = ["/api/user/privacy/blocklist", "/api/privacy/blocklist"];
-
       try {
         setBlocklistLoading(true);
-        let data: unknown = [];
-        let resolved = false;
-
-        for (const endpoint of blocklistEndpoints) {
-          const response = await fetch(endpoint, { cache: "no-store" });
-          if (!response.ok) {
-            continue;
-          }
-          data = await response.json();
-          resolved = true;
-          break;
-        }
-
-        if (!resolved) {
-          throw new Error("Failed to fetch blocklist");
-        }
-
-        if (Array.isArray(data)) {
-          setBlockedUsers(data as BlockedUser[]);
-          localStorage.setItem(BLOCKLIST_STORAGE_KEY, JSON.stringify(data));
-          return;
-        }
-
-        setBlockedUsers([]);
+        const data = await getBlockedUsers();
+        setBlockedUsers(data);
+        localStorage.setItem(BLOCKLIST_STORAGE_KEY, JSON.stringify(data));
       } catch {
         const stored = localStorage.getItem(BLOCKLIST_STORAGE_KEY);
         if (stored) {
@@ -351,23 +326,13 @@ export default function SettingsPage() {
     setLinkEmail("");
 
     try {
-      const res = await fetch("/api/account-links", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ provider: targetProviderId, email: emailToUse }),
-      });
-
-      if (res.ok) {
-        const updatedData = await res.json();
-        const mapped = updatedData.map((p: RawProvider) => ({
-          ...p,
-          icon: getIcon(p.id)
-        }));
-        setProviders(mapped);
-        showToast(`Successfully linked ${providerName} account!`, "success");
-      } else {
-        throw new Error();
-      }
+      const updatedData = await linkAccount({ provider: targetProviderId, email: emailToUse });
+      const mapped = updatedData.map((p: RawProvider) => ({
+        ...p,
+        icon: getIcon(p.id)
+      }));
+      setProviders(mapped);
+      showToast(`Successfully linked ${providerName} account!`, "success");
     } catch {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       const updated = providers.map((p) => {
@@ -405,21 +370,13 @@ export default function SettingsPage() {
     setUnlinkProvider(null);
 
     try {
-      const res = await fetch(`/api/account-links?provider=${targetProviderId}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        const updatedData = await res.json();
-        const mapped = updatedData.map((p: RawProvider) => ({
-          ...p,
-          icon: getIcon(p.id)
-        }));
-        setProviders(mapped);
-        showToast(`Disconnected ${providerName} successfully.`, "success");
-      } else {
-        throw new Error();
-      }
+      const updatedData = await unlinkAccount(targetProviderId);
+      const mapped = updatedData.map((p: RawProvider) => ({
+        ...p,
+        icon: getIcon(p.id)
+      }));
+      setProviders(mapped);
+      showToast(`Disconnected ${providerName} successfully.`, "success");
     } catch {
       await new Promise((resolve) => setTimeout(resolve, 1200));
       const updated = providers.map((p) => {
@@ -489,19 +446,9 @@ export default function SettingsPage() {
   const handleSavePreferences = async () => {
     try {
       setPrefSaving(true);
-      const res = await fetch("/api/preferences", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(preferences),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setPreferences(data);
-        showToast("Notification preferences updated successfully!", "success");
-      } else {
-        throw new Error();
-      }
+      const data = await updatePreferences(preferences);
+      setPreferences(data);
+      showToast("Notification preferences updated successfully!", "success");
     } catch {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       localStorage.setItem("artisan-notification-preferences", JSON.stringify(preferences));
@@ -524,17 +471,8 @@ export default function SettingsPage() {
     setPrivacySaving(true);
 
     try {
-      const response = await fetch("/api/user/privacy", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(privacySettings),
-      });
-
-      if (response.ok) {
-        showToast("Privacy settings saved successfully!", "success");
-      } else {
-        throw new Error("Persistence failed");
-      }
+      await updatePrivacySettings(privacySettings);
+      showToast("Privacy settings saved successfully!", "success");
     } catch {
       showToast("Error saving settings. Please try again.", "error");
     } finally {
@@ -554,33 +492,7 @@ export default function SettingsPage() {
     setBlockedUsers((prev) => prev.filter((user) => user.id !== userId));
 
     try {
-      const unblockAttempts = [
-        {
-          endpoint: `/api/user/privacy/blocklist/${userId}`,
-          options: { method: "DELETE" },
-        },
-        {
-          endpoint: "/api/user/privacy/blocklist",
-          options: {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId }),
-          },
-        },
-      ];
-
-      let unblocked = false;
-      for (const attempt of unblockAttempts) {
-        const response = await fetch(attempt.endpoint, attempt.options);
-        if (response.ok) {
-          unblocked = true;
-          break;
-        }
-      }
-
-      if (!unblocked) {
-        throw new Error("Unable to unblock user");
-      }
+      await unblockUser(userId);
 
       localStorage.setItem(
         BLOCKLIST_STORAGE_KEY,
@@ -1047,11 +959,8 @@ export default function SettingsPage() {
                     onClick={async () => {
                       setPrivacyLoading(true);
                       try {
-                        const response = await fetch("/api/user/privacy");
-                        if (response.ok) {
-                          const data = await response.json();
-                          setPrivacySettings(data);
-                        }
+                        const data = await getPrivacySettings();
+                        setPrivacySettings(data);
                       } catch (error) {
                         console.error("Failed to fetch privacy settings:", error);
                       } finally {

@@ -8,6 +8,8 @@ import JobFilter from './JobFilters';
 import Link from 'next/link';
 import bgImg from '../(assets)/bg.png';
 import { useWallet } from '@/context/WalletProvider';
+import { createApplication } from '@/lib/api/applications';
+import { ApiClientError } from '@/lib/api/errors';
 
 const JobCard = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -53,44 +55,33 @@ const JobCard = () => {
     setStatusMap((s) => ({ ...s, [idx]: { state: 'loading' } }));
 
     try {
-      const payload = {
+      await createApplication({
         jobTitle: job.title,
         jobShortDescription: job.shortDescription,
         location: job.location,
         applicant: publicKey,
-      };
-
-      const res = await fetch('/api/applications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
       });
 
-      if (res.status === 201) {
-        setStatusMap((s) => ({
-          ...s,
-          [idx]: { state: 'success', message: 'Application submitted.' },
-        }));
-      } else if (res.status === 409) {
+      setStatusMap((s) => ({
+        ...s,
+        [idx]: { state: 'success', message: 'Application submitted.' },
+      }));
+    } catch (err) {
+      if (err instanceof ApiClientError && err.isStatus(409)) {
         setStatusMap((s) => ({
           ...s,
           [idx]: { state: 'duplicate', message: 'You have already applied.' },
         }));
       } else {
-        const data = await res.json().catch(() => ({}));
+        const message =
+          err instanceof ApiClientError
+            ? err.message
+            : 'Failed to submit application.';
         setStatusMap((s) => ({
           ...s,
-          [idx]: {
-            state: 'error',
-            message: data?.message || 'Failed to submit application.',
-          },
+          [idx]: { state: 'error', message },
         }));
       }
-    } catch {
-      setStatusMap((s) => ({
-        ...s,
-        [idx]: { state: 'error', message: 'Network error.' },
-      }));
     }
   };
 

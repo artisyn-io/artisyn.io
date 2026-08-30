@@ -3,10 +3,7 @@
 import type { KeyboardEvent, ReactNode } from "react";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 
-type Suggestion = {
-  label: string;
-  type?: string;
-};
+import { listSuggestions, type Suggestion } from "@/lib/api/artisans";
 
 type SuggestionRenderProps = {
   activeDescendantId: string | undefined;
@@ -60,24 +57,10 @@ export function SuggestionsDropdown({
       setIsLoading(true);
 
       try {
-        const response = await fetch(
-          `/api/artisans/suggestions?q=${encodeURIComponent(debouncedQuery)}`,
-          { signal: controller.signal }
-        );
-
-        if (!response.ok) {
-          throw new Error("Could not load artisan suggestions.");
-        }
-
-        const data = (await response.json()) as {
-          suggestions?: Array<string | Suggestion>;
-        };
-
-        const nextSuggestions = (data.suggestions ?? [])
-          .map((suggestion) =>
-            typeof suggestion === "string" ? { label: suggestion } : suggestion
-          )
-          .filter((suggestion) => Boolean(suggestion.label));
+        const nextSuggestions = await listSuggestions({
+          q: debouncedQuery,
+          signal: controller.signal,
+        });
 
         setSuggestions(nextSuggestions);
         setActiveIndex(nextSuggestions.length > 0 ? 0 : -1);
