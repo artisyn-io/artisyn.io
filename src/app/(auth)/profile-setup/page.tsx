@@ -3,6 +3,8 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { useOnboarding } from '@/components/artisan/onboarding-context';
+
 export default function ProfileSetupIndex() {
   const router = useRouter();
   const { accountType, completed, isHydrated } = useOnboarding();
