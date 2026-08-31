@@ -6,9 +6,11 @@ import type { AccountType } from "@/components/artisan/onboarding-types"
 
 interface OnboardingSuccessProps {
   accountType: AccountType
+  /** Invoked when the user continues to their role-specific dashboard. */
+  onContinue?: () => void
 }
 
-export function OnboardingSuccess({ accountType }: OnboardingSuccessProps) {
+export function OnboardingSuccess({ accountType, onContinue }: OnboardingSuccessProps) {
   const isArtisan = accountType === "artisan"
 
   return (
@@ -82,6 +84,7 @@ export function OnboardingSuccess({ accountType }: OnboardingSuccessProps) {
       >
         <motion.button
           type="button"
+          onClick={onContinue}
           whileHover={{ scale: 1.03, y: -2 }}
           whileTap={{ scale: 0.97 }}
           className="group w-full sm:w-auto px-[32px] sm:px-[40px] md:px-[48px] py-[12px] sm:py-[13px] mt-[24px] sm:mt-[32px] md:mt-[4vh] rounded-[8px] sm:rounded-[10px] font-medium text-[white] font-[500] text-[15px] sm:text-[16px] bg-[#6366f1] hover:bg-[#5558e3] transition-all duration-[200ms] border-[0] cursor-pointer shadow-lg shadow-[#6366f1]/20 hover:shadow-xl hover:shadow-[#6366f1]/30 inline-flex items-center justify-center gap-[8px]"

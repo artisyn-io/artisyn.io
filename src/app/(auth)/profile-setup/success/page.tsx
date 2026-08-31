@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { useOnboarding } from '@/components/artisan/onboarding-context';
 import { OnboardingSuccess } from '@/components/artisan/onboarding-success';
+import { dashboardRouteForRole } from '@/lib/navigation';
 
 export default function OnboardingSuccessStep() {
   const router = useRouter();
@@ -17,6 +18,10 @@ export default function OnboardingSuccessStep() {
     }
   }, [accountType, isHydrated, router]);
 
+  const handleContinue = () => {
+    router.push(dashboardRouteForRole(accountType));
+  };
+
   if (!isHydrated) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
@@ -27,7 +32,7 @@ export default function OnboardingSuccessStep() {
 
   return (
     <div className="w-full max-w-[520px]">
-      <OnboardingSuccess accountType={accountType} />
+      <OnboardingSuccess accountType={accountType} onContinue={handleContinue} />
     </div>
   );
 }
