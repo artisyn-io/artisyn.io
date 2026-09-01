@@ -10,6 +10,8 @@ import Link from 'next/link';
 import bgImg from '../(assets)/bg.png';
 import { useApplications, useJobs } from '@/lib/hooks';
 import { useWallet } from '@/context/WalletProvider';
+import { createApplication } from '@/lib/api/applications';
+import { ApiClientError } from '@/lib/api/errors';
 
 type Filters = {
   search: string;

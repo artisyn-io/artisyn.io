@@ -2,7 +2,7 @@
 
 import { CheckCircle, ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
-import type { AccountType } from "@/app/(auth)/profile-setup/page"
+import type { AccountType } from "@/components/artisan/onboarding-types"
 
 interface OnboardingSuccessProps {
   accountType: AccountType

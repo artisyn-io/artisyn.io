@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 import { Edit3, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  getReviewResponse,
+  createReviewResponse,
+  updateReviewResponse,
+  deleteReviewResponse,
+} from "@/lib/api/review-responses";
 
 const MAX_LENGTH = 1000;
 const MIN_LENGTH = 10;
@@ -12,10 +18,12 @@ interface ReviewResponse {
   id: string;
   reviewId: string;
   body: string;
-  createdAt: string;
-  updatedAt: string;
-  authorName: string;
+  createdAt?: string;
+  updatedAt?: string;
+  authorName?: string;
+  [key: string]: unknown;
 }
+
 
 interface ReviewResponseComposerProps {
   reviewId: string;
@@ -39,10 +47,9 @@ export function ReviewResponseComposer({
     async function load() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/review-responses/${reviewId}`);
-        const json = await res.json();
-        if (!cancelled && json.data) {
-          setResponse(json.data);
+        const data = await getReviewResponse(reviewId);
+        if (!cancelled && data) {
+          setResponse(data);
           setMode("view");
         }
       } catch {
@@ -74,20 +81,11 @@ export function ReviewResponseComposer({
     setError("");
 
     try {
-      const method = mode === "edit" ? "PUT" : "POST";
-      const res = await fetch(`/api/review-responses/${reviewId}`, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ body: trimmed }),
-      });
+      const saved = await (mode === "edit"
+        ? updateReviewResponse(reviewId, { body: trimmed })
+        : createReviewResponse(reviewId, { body: trimmed }));
 
-      if (!res.ok) {
-        const json = await res.json();
-        throw new Error(json.error || "Failed to save response");
-      }
-
-      const json = await res.json();
-      setResponse(json.data);
+      setResponse(saved);
       setMode("view");
       setDraft("");
     } catch (err) {
@@ -104,14 +102,7 @@ export function ReviewResponseComposer({
     setError("");
 
     try {
-      const res = await fetch(`/api/review-responses/${reviewId}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        const json = await res.json();
-        throw new Error(json.error || "Failed to delete response");
-      }
+      await deleteReviewResponse(reviewId);
 
       setResponse(null);
       setMode("view");
@@ -252,11 +243,13 @@ export function ReviewResponseComposer({
           </p>
           <p className="mt-1 text-xs text-slate-400">
             Updated{" "}
-            {new Intl.DateTimeFormat(undefined, {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            }).format(new Date(response.updatedAt))}
+            {response.updatedAt
+              ? new Intl.DateTimeFormat(undefined, {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                }).format(new Date(response.updatedAt))
+              : ""}
           </p>
         </div>
       </div>
