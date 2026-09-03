@@ -10,13 +10,11 @@ export { ApiClientError } from "./errors";
 export * from "./account-links";
 export * from "./applications";
 export * from "./artisans";
+export * from "./gdpr";
 export * from "./jobs";
 export * from "./preferences";
 export * from "./profile";
 export * from "./review-responses";
 export * from "./user";
 
-export type {
-  DashboardMetrics,
-  DashboardApiResponse,
-} from "./dashboard";
+export type { DashboardMetrics, DashboardApiResponse } from "./dashboard";
