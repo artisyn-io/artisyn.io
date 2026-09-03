@@ -3,6 +3,7 @@
 import { useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, type Role } from "@/context/AuthProvider";
+import { dashboardRouteForRole } from "@/lib/navigation";
 
 interface RoleGuardProps {
   /** Roles permitted to view the guarded content. */
@@ -13,13 +14,6 @@ interface RoleGuardProps {
    * users are sent to the home route appropriate for their own role.
    */
   redirectTo?: string;
-}
-
-/** Returns the home route for a given role (or the public home when unknown). */
-function roleHome(role: Role | null): string {
-  if (role === "artisan") return "/artisan/dashboard";
-  if (role === "client") return "/client";
-  return "/";
 }
 
 /**
@@ -43,7 +37,7 @@ export function RoleGuard({
 
   useEffect(() => {
     if (!authorized) {
-      router.replace(redirectTo ?? roleHome(role));
+      router.replace(redirectTo ?? dashboardRouteForRole(role));
     }
   }, [authorized, role, redirectTo, router]);
 
