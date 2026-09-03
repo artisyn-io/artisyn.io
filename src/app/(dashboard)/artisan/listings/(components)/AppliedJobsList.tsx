@@ -1,51 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import bgImg from "../(assets)/bg.png";
-import { getApplications } from "@/lib/api/applications";
+import { useApplications } from "@/lib/hooks";
 
-interface Application {
-  id: string;
-  jobId: string;
-  jobTitle: string;
-  company: string;
-  state: string;
-  appliedAt: string;
-  updatedAt: string;
-}
+const formatDate = (value: string) =>
+  value ? new Date(value).toLocaleDateString() : "—";
+
+const formatDateTime = (value: string) =>
+  value ? new Date(value).toLocaleString() : "—";
 
 const AppliedJobsList = () => {
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { applications, isLoading, error, refetch } = useApplications();
 
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const data = await getApplications();
-        setApplications(
-          data.map((app) => ({
-            id: app.id,
-            jobId: app.id,
-            jobTitle: app.jobTitle,
-            company: app.applicant,
-            state: "Applied",
-            appliedAt: app.createdAt,
-            updatedAt: app.createdAt,
-          }))
-        );
-      } catch (error) {
-        console.error("Failed to fetch applications:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchApplications();
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return <div className="py-10 text-center text-sm text-gray-500">Loading applications...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="py-10 text-center">
+        <p className="text-sm text-red-600">{error}</p>
+        <button
+          onClick={() => refetch()}
+          className="mt-3 px-4 py-2 text-sm border rounded-md hover:bg-gray-50"
+        >
+          Try again
+        </button>
+      </div>
+    );
   }
 
   if (applications.length === 0) {
@@ -70,12 +53,12 @@ const AppliedJobsList = () => {
             <div className="flex lg:justify-between lg:items-center md:justify-between md:items-center lg:flex-row md:flex-row flex-col">
               <div>
                 <p className="text-[12px] text-[#212121]">
-                  Applied: {new Date(app.appliedAt).toLocaleDateString()}
+                  Applied: {formatDate(app.appliedAt)}
                 </p>
                 <h2 className="lg:text-[20px] md:text-[18px] text-[16px] font-semibold">
                   {app.jobTitle}
                 </h2>
-                <p className="text-[14px] text-gray-600 mt-1">{app.company}</p>
+                <p className="text-[14px] text-gray-600 mt-1">{app.company || app.location}</p>
               </div>
               
               <div className="lg:my-0 md:my-0 my-3">
@@ -93,7 +76,7 @@ const AppliedJobsList = () => {
 
             <div className="text-[12px] text-[#777679] mt-auto pt-4 flex flex-col lg:flex-row md:flex-row">
               <p>
-                Last updated: {new Date(app.updatedAt).toLocaleString()}
+                Last updated: {formatDateTime(app.updatedAt)}
               </p>
             </div>
           </div>
