@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Menu, X, CreditCard, OctagonAlert } from "lucide-react";
+import { Menu, X, CreditCard, OctagonAlert, TrendingUp } from "lucide-react";
 import {
 	HomeIcon,
 	ReportIcon,
@@ -30,6 +30,11 @@ export default function Sidebar() {
 			href: "/artisan/jobs",
 			label: "Jobs",
 			icon: ReportIcon,
+		},
+		{
+			href: "/artisan/earnings",
+			label: "Earnings",
+			icon: TrendingUp,
 		},
 		{
 			href: "/artisan/profile",
