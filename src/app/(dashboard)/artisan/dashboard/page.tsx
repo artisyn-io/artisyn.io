@@ -14,6 +14,7 @@ import {
 import bgImg from '../listings/(assets)/bg.png';
 import { jobs } from '../listings/dummyjobs';
 import { JobStatusBadge } from '@/components/jobs/job-status-badge';
+import { EmptyState } from '@/components/ui/empty-state';
 import {
   fetchDashboardMetrics,
   type DashboardMetrics,
@@ -82,13 +83,12 @@ function ErrorBanner({
 
 function EmptyMetrics() {
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <TrendingUp className="w-12 h-12 text-gray-300 mb-3" />
-      <p className="text-gray-500 font-medium">No metrics available yet</p>
-      <p className="text-sm text-gray-400 mt-1">
-        Complete your first job to start seeing performance data here.
-      </p>
-    </div>
+    <EmptyState
+      bordered={false}
+      icon={<TrendingUp />}
+      title="No metrics available yet"
+      description="Complete your first job to start seeing performance data here."
+    />
   );
 }
 
@@ -321,9 +321,11 @@ export default function ArtisanDashboard() {
             {loading ? (
               <ProfilePerformanceSkeleton />
             ) : !metrics ? (
-              <div className="p-6 text-center text-sm text-gray-400">
-                No performance data available.
-              </div>
+              <EmptyState
+                bordered={false}
+                className="py-6"
+                title="No performance data available."
+              />
             ) : (
               <div className="divide-y divide-gray-200">
                 <div className="p-4">
@@ -380,9 +382,20 @@ export default function ArtisanDashboard() {
                   <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
                 </div>
               ) : activeJobsData.length === 0 ? (
-                <div className="p-6 text-center text-sm text-gray-400">
-                  No active jobs at the moment.
-                </div>
+                <EmptyState
+                  bordered={false}
+                  className="py-8"
+                  icon={<Briefcase />}
+                  title="No active jobs at the moment."
+                  action={
+                    <Link
+                      href="/artisan/jobs"
+                      className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
+                    >
+                      Browse available jobs
+                    </Link>
+                  }
+                />
               ) : (
                 activeJobsData.map((job, index) => (
                   <div

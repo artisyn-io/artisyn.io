@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { CheckCircle2 } from "lucide-react";
 import bgImg from "../(assets)/bg.png";
 import { useApplications } from "@/lib/hooks";
+import { EmptyState } from "@/components/ui/empty-state";
 
 interface Application {
   id: string;
@@ -47,7 +49,14 @@ const AppliedJobsList = () => {
   }
 
   if (applications.length === 0) {
-    return <div className="py-20 text-center text-sm text-gray-500">No applied jobs yet.</div>;
+    return (
+      <EmptyState
+        bordered={false}
+        icon={<CheckCircle2 />}
+        title="No applied jobs yet."
+        description="Browse the available jobs and send a proposal to get started."
+      />
+    );
   }
 
   return (

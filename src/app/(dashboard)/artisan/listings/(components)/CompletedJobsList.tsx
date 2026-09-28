@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { CheckCheck } from "lucide-react";
 import { useJobs } from "@/lib/hooks";
+import { EmptyState } from "@/components/ui/empty-state";
 
 interface CompletedJob {
   id: string;
@@ -45,7 +47,14 @@ const CompletedJobsList = () => {
   }
 
   if (jobs.length === 0) {
-    return <div className="py-20 text-center text-sm text-gray-500">No completed jobs yet.</div>;
+    return (
+      <EmptyState
+        bordered={false}
+        icon={<CheckCheck />}
+        title="No completed jobs yet."
+        description="Finished jobs and their payments will be listed here."
+      />
+    );
   }
 
   return (

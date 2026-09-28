@@ -3,7 +3,8 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Search, ChevronDown, ChevronUp, MessageCircle, FileText, Mail } from "lucide-react";
+import { Search, ChevronDown, ChevronUp, MessageCircle, FileText, Mail, SearchX } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const faqs = [
 	{
@@ -190,9 +191,20 @@ export default function HelpPage() {
 					))}
 				</div>
 			) : (
-				<div className="text-center py-12 text-gray-500 text-sm mb-10">
-					No results found for &ldquo;{query}&rdquo;. Try a different search term or contact support below.
-				</div>
+				<EmptyState
+					icon={<SearchX />}
+					title={`No results found for “${query}”.`}
+					description="Try a different search term, or contact support below."
+					action={
+						<Link
+							href="/contact"
+							className="flex items-center gap-2 bg-[#605DEC] text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-[#4f4cd4] transition-colors"
+						>
+							<Mail className="w-4 h-4" />
+							Contact Support
+						</Link>
+					}
+				/>
 			)}
 
 			{/* Support CTA */}

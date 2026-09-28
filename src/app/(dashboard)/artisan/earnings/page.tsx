@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { StatCard } from "@/components/ui/stat-card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { useEarningsSummary, useEarningsTransactions } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import type {
@@ -235,16 +236,12 @@ function ErrorBanner({
 
 function EmptyTransactions() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
-      <ReceiptText
-        className="w-12 h-12 text-gray-300 mb-3"
-        aria-hidden="true"
-      />
-      <p className="text-gray-500 font-medium">No transactions found</p>
-      <p className="text-sm text-gray-400 mt-1">
-        Try adjusting your filters or check back after completing a job.
-      </p>
-    </div>
+    <EmptyState
+      bordered={false}
+      icon={<ReceiptText />}
+      title="No transactions found"
+      description="Try adjusting your filters or check back after completing a job."
+    />
   );
 }
 

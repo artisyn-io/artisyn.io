@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { Search } from "lucide-react";
+import { Search, SearchX } from "lucide-react";
 import {
   usePathname,
   useRouter,
@@ -9,6 +9,7 @@ import {
 } from "next/navigation";
 import { useDeferredValue, useMemo } from "react";
 
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   ARTISAN_SEARCH_CATEGORIES,
   ARTISAN_SEARCH_RESULTS,
@@ -319,15 +320,24 @@ function ArtisanSearchPageContent() {
                 ))}
               </div>
             ) : (
-              <div className="rounded-xl border border-dashed border-[#CBD5E1] bg-white px-6 py-16 text-center">
-                <h2 className="text-2xl font-semibold text-[#020817]">
-                  No artisans match this search yet.
-                </h2>
-                <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-[#64748B]">
-                  Try broadening your search term, removing a filter, or
-                  increasing your price range to see more results.
-                </p>
-              </div>
+              <EmptyState
+                className="border-[#CBD5E1]"
+                description="Try broadening your search term, removing a filter, or increasing your price range to see more results."
+                icon={<SearchX className="text-[#64748B]" />}
+                title="No artisans match this search yet."
+                titleAs="h2"
+                action={
+                  searchParams.toString() ? (
+                    <button
+                      type="button"
+                      onClick={() => router.replace(pathname, { scroll: false })}
+                      className="rounded-full bg-[#605DEC] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4F4CD4]"
+                    >
+                      Clear search and filters
+                    </button>
+                  ) : null
+                }
+              />
             )}
 
             <div className="rounded-xl border border-[#E2E8F0] bg-white p-4">

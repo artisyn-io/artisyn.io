@@ -7,18 +7,21 @@ import { jobs } from "../dummyjobs";
 import Image from "next/image";
 import bgImg from "../(assets)/bg.png";
 import CompletedJobsList from "./CompletedJobsList";
-
-const EmptyState = ({ text }: { text: string }) => (
-  <div className="py-20 text-center text-sm text-gray-500">
-    {text}
-  </div>
-);
+import { EmptyState } from "@/components/ui/empty-state";
+import { Briefcase } from "lucide-react";
 
 const ActiveJobCard = () => {
   const activeJobs = jobs.filter((job) => job.status === "active");
 
   if (activeJobs.length === 0) {
-    return <EmptyState text="No active jobs yet." />;
+    return (
+      <EmptyState
+        bordered={false}
+        icon={<Briefcase />}
+        title="No active jobs yet."
+        description="Jobs you are currently working on will appear here."
+      />
+    );
   }
 
   return (
