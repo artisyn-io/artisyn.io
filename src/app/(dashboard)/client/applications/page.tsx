@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Inbox } from "lucide-react";
 
 import {
 	updateApplicationStatus,
@@ -9,6 +10,7 @@ import {
 } from "@/lib/api/applications";
 import { useApplications } from "@/lib/hooks";
 import { useToast } from "@/context/ToastProvider";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const STATUS_STYLES: Record<ApplicationStatus, string> = {
 	pending: "bg-amber-50 text-amber-700",
@@ -59,9 +61,11 @@ export default function ClientApplicationsPage() {
 					{error.message}
 				</p>
 			) : groups.length === 0 ? (
-				<section className="rounded-xl border border-gray-100 bg-white p-6 text-sm text-gray-600 shadow-sm">
-					No applications yet.
-				</section>
+				<EmptyState
+					icon={<Inbox />}
+					title="No applications yet."
+					description="Post a listing and artisans will be able to send you proposals here."
+				/>
 			) : (
 				groups.map(([listing, applications]) => (
 					<section

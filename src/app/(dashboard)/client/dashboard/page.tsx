@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useApplications } from "@/lib/hooks";
 import { ARTISAN_SEARCH_RESULTS } from "@/components/search/artisan-search-data";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const SAVED_STORAGE_KEY = "artisyn.savedArtisans";
 const DEFAULT_SAVED_COUNT = ARTISAN_SEARCH_RESULTS.slice(0, 3).length;
@@ -235,15 +236,14 @@ export default function ClientDashboardPage() {
             })}
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-slate-200 p-8 text-center shadow-sm">
-            <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-3 text-slate-400">
-              <Inbox className="w-6 h-6" />
-            </div>
-            <h3 className="text-base font-medium text-slate-900">No applications received yet</h3>
-            <p className="mt-1 text-sm text-slate-500 max-w-md mx-auto">
-              When artisans submit proposals for your job listings, their activity and applications will appear here.
-            </p>
-            <div className="mt-4">
+          <EmptyState
+            bordered={false}
+            className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm"
+            icon={<Inbox className="text-slate-400" />}
+            title="No applications received yet"
+            titleAs="h3"
+            description="When artisans submit proposals for your job listings, their activity and applications will appear here."
+            action={
               <Link
                 href="/search"
                 className="inline-flex items-center gap-2 text-sm font-medium text-[#605DEC] hover:underline"
@@ -251,8 +251,8 @@ export default function ClientDashboardPage() {
                 Discover and invite artisans
                 <ArrowRight className="w-4 h-4" />
               </Link>
-            </div>
-          </div>
+            }
+          />
         )}
       </section>
     </div>

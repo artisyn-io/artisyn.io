@@ -3,10 +3,12 @@
 import { Suspense, useCallback, useMemo, useState } from 'react';
 
 import Image from 'next/image';
+import { Briefcase } from 'lucide-react';
 import type { Job } from '@/lib/api/jobs';
 import JobFilter from './JobFilters';
 import Link from 'next/link';
 import bgImg from '../(assets)/bg.png';
+import { EmptyState } from '@/components/ui/empty-state';
 import { useWallet } from '@/context/WalletProvider';
 import { useCreateApplication, useJobs } from '@/lib/hooks';
 import { ApiClientError } from '@/lib/api/errors';
@@ -195,9 +197,11 @@ const JobCard = () => {
           ))}
 
           {filteredJobs.length === 0 && (
-            <p className="text-center text-gray-500 mt-10">
-              No jobs match your filters
-            </p>
+            <EmptyState
+              icon={<Briefcase />}
+              title="No jobs match your filters"
+              description="Try a different search term, or clear the filters to see every available job."
+            />
           )}
         </div>
       )}

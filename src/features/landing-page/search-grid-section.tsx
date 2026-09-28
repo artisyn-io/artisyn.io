@@ -9,10 +9,12 @@ import {
   Paintbrush,
   Plug,
   Scissors,
+  SearchX,
   Shirt,
   Wrench,
 } from 'lucide-react';
 
+import { EmptyState } from '@/components/ui/empty-state';
 import { ArtisanBadge } from '../../components/artisan/artisan-badge';
 import { ArtisanGrid } from './artisan-grid';
 import { ArtisanSearch } from './artisan-search';
@@ -128,16 +130,33 @@ export function SearchGridSection() {
 
         <AnimatePresence mode="wait">
           {filteredArtisansByCategoryAndSearch.length === 0 ? (
-            <motion.p
+            <motion.div
               key="no-results"
               initial={false}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
-              className="text-center text-[#262626] text-base mb-12"
+              className="mb-12"
             >
-              No artisans found in this category.
-            </motion.p>
+              <EmptyState
+                bordered={false}
+                icon={<SearchX />}
+                title="No artisans found in this category."
+                description="Try another category, or clear your search to see every artisan."
+                action={
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchTerm("");
+                      setActiveCategory("");
+                    }}
+                    className="rounded-full bg-[#605DEC] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4F4CD4]"
+                  >
+                    Show all artisans
+                  </button>
+                }
+              />
+            </motion.div>
           ) : (
             <motion.div
               key="results"
