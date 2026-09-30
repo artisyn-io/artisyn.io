@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml 
 
@@ -33,6 +33,12 @@ jobs:
 
       - name: Linting
         run: pnpm lint
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Unit and component tests
+        run: pnpm test:coverage
 
       - name: Build Frontend
         run: pnpm build
