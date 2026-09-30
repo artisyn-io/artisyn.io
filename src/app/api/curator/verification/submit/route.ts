@@ -1,3 +1,6 @@
+import { readCuratorVerifications, writeCuratorVerifications } from "@/lib/server/curator-verifications";
+import type { CuratorVerificationRequest } from "@/lib/api/curator";
+
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ACCEPTED_TYPES = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,8 +31,20 @@ export async function POST(req: Request) {
     return Response.json({ message: "Please fix the highlighted fields.", errors }, { status: 400 });
   }
 
-  return Response.json(
-    { id: `${Date.now()}`, status: "pending", submittedAt: new Date().toISOString() },
-    { status: 201 },
-  );
+  const application: CuratorVerificationRequest = {
+    id: `${Date.now()}`,
+    fullName: text("fullName"),
+    email: text("email"),
+    specialization: text("specialization"),
+    experienceYears: text("experienceYears"),
+    statement: text("statement"),
+    documents: documents.map((document) => document.name),
+    status: "pending",
+    submittedAt: new Date().toISOString(),
+  };
+  const applications = await readCuratorVerifications();
+  applications.unshift(application);
+  await writeCuratorVerifications(applications);
+
+  return Response.json(application, { status: 201 });
 }
