@@ -71,10 +71,22 @@ function b64urlToBytes(s: string): Uint8Array | null {
   }
 }
 
+/**
+ * Copy encoded bytes into a plain, non-shared ArrayBuffer. `TextEncoder.encode`
+ * is typed as `Uint8Array<ArrayBufferLike>` in the Node typings while Web Crypto
+ * only accepts `BufferSource` (`ArrayBuffer`-backed views); copying yields a
+ * value both agree on without an unsafe cast.
+ */
+function toBufferSource(bytes: Uint8Array): ArrayBuffer {
+  const copy = new Uint8Array(bytes.byteLength);
+  copy.set(bytes);
+  return copy.buffer;
+}
+
 async function hmacKey(): Promise<CryptoKey> {
   return crypto.subtle.importKey(
     "raw",
-    encoder.encode(getSecret()),
+    toBufferSource(encoder.encode(getSecret())),
     { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign"],
@@ -83,7 +95,11 @@ async function hmacKey(): Promise<CryptoKey> {
 
 async function hmac(input: string): Promise<Uint8Array> {
   const key = await hmacKey();
-  const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(input));
+  const sig = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    toBufferSource(encoder.encode(input)),
+  );
   return new Uint8Array(sig);
 }
 
